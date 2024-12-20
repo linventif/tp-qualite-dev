@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Programmation objet avec Kotlin</title>
+<meta name="author" content="Cédric Lhoussaine">
+<meta name="generator" content="Org Mode">
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="Programmation%20objet%20avec%20Kotlin_files/style.css">
+<link href="data:text/css,%3Ais(%5Bid*%3D'google_ads_iframe'%5D%2C%5Bid*%3D'taboola-'%5D%2C.taboolaHeight%2C.taboola-placeholder%2C%23top-ad%2C%23credential_picker_container%2C%23credentials-picker-container%2C%23credential_picker_iframe%2C%5Bid*%3D'google-one-tap-iframe'%5D%2C%23google-one-tap-popup-container%2C.google-one-tap__module%2C.google-one-tap-modal-div%2C%23amp_floatingAdDiv%2C%23ez-content-blocker-container)%20%7Bdisplay%3Anone!important%3Bmin-height%3A0!important%3Bheight%3A0!important%3B%7D" rel="stylesheet" type="text/css"></head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Programmation objet avec Kotlin
+<br>
+<span class="subtitle">BUT Informatique - S5 - Qualité de développement</span>
+</h1>
+<div id="outline-container-orgd6b3a42" class="outline-2">
+<h2 id="orgd6b3a42"><span class="section-number-2">1.</span> Exercices d’échauffement</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orga9d4b88" class="outline-3">
+<h3 id="orga9d4b88"><span class="section-number-3">1.1.</span> Creating Classes (#1)</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Create a class named <code>SomeClass</code> with three member functions: <code>a()</code> which displays
+<code>42</code> on the console when you call it, <code>b()</code> which calls <code>a()</code>, and <code>c()</code> which calls <code>b()</code>
+by qualifying it (ie. that is specifying its object).
+</p>
+</div>
+</div>
+<div id="outline-container-orgfd0495a" class="outline-3">
+<h3 id="orgfd0495a"><span class="section-number-3">1.2.</span> Creating Classes (#2)</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Create a class <code>Giraffe</code> with a single member function <code>displayID()</code> that displays
+the address of the object. Call <code>Strings substringAfter()</code> to extract the address
+from the default object representation. Run the following code and compare the
+addresses:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">val</span> <span style="color: #6a1868;">giraffe1</span> = <span style="color: #986801;">Giraffe</span>()
+<span style="color: #e45649;">val</span> <span style="color: #6a1868;">giraffe2</span> = <span style="color: #986801;">Giraffe</span>()
+<span style="color: #e45649;">val</span> <span style="color: #6a1868;">giraffe3</span> = <span style="color: #986801;">Giraffe</span>()
+giraffe1.displayID()
+giraffe2.displayID()
+giraffe3.displayID()
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org90143f2" class="outline-3">
+<h3 id="org90143f2"><span class="section-number-3">1.3.</span> Creating Classes (#3)</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Create a <code>Robot</code> class with the following four member functions: <code>right(steps:
+Int), left(steps: Int), down(steps: Int) and up(steps: Int)</code>. Each function
+should display one of the following phrases on the console:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #986801;">Right</span> <span style="color: #986801;">N</span> steps
+<span style="color: #986801;">Left</span> <span style="color: #986801;">N</span> steps
+<span style="color: #986801;">Down</span> <span style="color: #986801;">N</span> steps
+<span style="color: #986801;">Up</span> <span style="color: #986801;">N</span> steps
+</pre>
+</div>
+<p>
+where <code>N</code> is the provided number of steps.
+</p>
+</div>
+</div>
+<div id="outline-container-orgdd3107a" class="outline-3">
+<h3 id="orgdd3107a"><span class="section-number-3">1.4.</span> Properties (#1)</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+Create a class <code>X</code> that contains three <code>Int</code> properties: <code>a</code> and <code>b</code> are vals and <code>c</code> is a
+var. Initialize <code>a</code> to 3, <code>b</code> to 42, and <code>c</code> to zero. Create an <code>add()</code> member function
+that sums <code>a</code> and <code>b</code> and assigns the result to <code>c</code>, then returns <code>c</code>. Write a <code>main()</code> to
+test <code>X</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-orgfa1b82e" class="outline-3">
+<h3 id="orgfa1b82e"><span class="section-number-3">1.5.</span> Properties (#2)</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+A Robot object starts in the (0, 0) cell and can move right, left, up and down.
+Its location is stored as a pair of coordinates (x, y), where (0, 0) is the
+top-left corner:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin">(x, y)
+(<span style="color: #da8548; font-weight: bold;">0</span>, <span style="color: #da8548; font-weight: bold;">0</span>) (<span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">0</span>)
+(<span style="color: #da8548; font-weight: bold;">0</span>, <span style="color: #da8548; font-weight: bold;">1</span>) (<span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">1</span>)
+</pre>
+</div>
+<p>
+Moving right increases the x coordinate, moving down increases the y coordinate,
+while moving left and up decrease the x and y coordinates.
+</p>
+
+<p>
+Implement Robot’s member functions <code>right()</code>, <code>left()</code>, <code>up()</code> and <code>down()</code>, each of
+which takes a steps parameter. Also implement <code>getLocation()</code> which returns the
+Robot’s coordinates as a <code>String</code> in the form <code>(x, y)</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-org2c2ee85" class="outline-3">
+<h3 id="org2c2ee85"><span class="section-number-3">1.6.</span> Properties (#3)</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+A Robot can move within a square field of size 100x100. The borders of this
+field are «&nbsp;looped&nbsp;»: if the robot is in cell (0, 0) and moves up one step, it
+arrives in cell (0, 99).
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin">(<span style="color: #da8548; font-weight: bold;">0</span>, <span style="color: #da8548; font-weight: bold;">0</span>)
+<span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">up(1)</span>
+(<span style="color: #da8548; font-weight: bold;">0</span>, <span style="color: #da8548; font-weight: bold;">99</span>)
+<span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">left(10)</span>
+(<span style="color: #da8548; font-weight: bold;">90</span>, <span style="color: #da8548; font-weight: bold;">99</span>)
+</pre>
+</div>
+<p>
+Modify <code>right()</code>, <code>left()</code>, <code>up()</code> and <code>down()</code> to implement this behavior.
+</p>
+</div>
+</div>
+<div id="outline-container-orgcfed7ab" class="outline-3">
+<h3 id="orgcfed7ab"><span class="section-number-3">1.7.</span> Constructors (#1)</h3>
+<div class="outline-text-3" id="text-1-7">
+<p>
+Create a class <code>Floating</code> that contains a val <code>d</code> of type <code>Double</code>. Initialize <code>d</code> in
+the constructor. Include a <code>toString()</code> member function that returns the contents
+of <code>d</code>. Write a <code>main()</code> to exercise the <code>Floating</code> class.
+</p>
+</div>
+</div>
+<div id="outline-container-org99cddeb" class="outline-3">
+<h3 id="org99cddeb"><span class="section-number-3">1.8.</span> Constructors (#2)</h3>
+<div class="outline-text-3" id="text-1-8">
+<p>
+Continue developing the <code>Robot</code> class from the previous exercises.
+Convert the properties storing the size of the field and the current coordinates
+into Robot constructor parameters.
+</p>
+</div>
+</div>
+<div id="outline-container-org3cd49c2" class="outline-3">
+<h3 id="org3cd49c2"><span class="section-number-3">1.9.</span> Constructors (#3)</h3>
+<div class="outline-text-3" id="text-1-9">
+<p>
+Add a <code>toString()</code> function that returns the <code>String</code> «&nbsp;Robot(x=…, y=…)&nbsp;» where
+the actual values of <code>x</code> and <code>y</code> are substituted for the ellipses. For example, if <code>x</code>
+is 1 and <code>y</code> is 2 it should return <code>Robot(x=1, y=2)</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-org1f731e2" class="outline-3">
+<h3 id="org1f731e2"><span class="section-number-3">1.10.</span> Constraining Visibility (#1)</h3>
+<div class="outline-text-3" id="text-1-10">
+<p>
+Create an <code>Alien</code> class with a constructor that initializes <code>public val name</code> and
+<code>public val species</code> properties. Add a private <code>var planet</code> property initialized by
+the constructor. <code>planet</code> can be modified with the <code>movePlanet()</code> member function.
+<code>movePlanet()</code> takes the planet the Alien is moving to as its parameter. All
+properties and parameters are of type <code>String</code>. Override <code>toString()</code> to return the
+name, species and planet in the format <code>"Alien $name, $species: $planet"</code>.
+</p>
+
+<p>
+In <code>main()</code>, create two Aliens and move them from an origin planet to a
+destination planet, testing them using <code>toString()</code> along with the data:
+</p>
+
+<table>
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-left">
+
+<col class="org-left">
+
+<col class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">name</th>
+<th scope="col" class="org-left">species</th>
+<th scope="col" class="org-left">Origin</th>
+<th scope="col" class="org-left">Destination</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Arthricia</td>
+<td class="org-left">Cat Person</td>
+<td class="org-left">PurgePlanet</td>
+<td class="org-left">Earth C-137</td>
+</tr>
+
+<tr>
+<td class="org-left">Dale</td>
+<td class="org-left">Giant</td>
+<td class="org-left">Gearworld</td>
+<td class="org-left">Parblesnops</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Note that a val property is safe to access directly as a public property rather than making it private.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf3dee5b" class="outline-3">
+<h3 id="orgf3dee5b"><span class="section-number-3">1.11.</span> Constraining Visibility (#2)</h3>
+<div class="outline-text-3" id="text-1-11">
+<p>
+Continue developing the <code>Robot</code> class from the previous exercises.
+Use private on all the properties, and verify that you can’t
+access the private members outside of the class.
+</p>
+</div>
+</div>
+<div id="outline-container-org100bfd3" class="outline-3">
+<h3 id="org100bfd3"><span class="section-number-3">1.12.</span> Property Accessors (#1)</h3>
+<div class="outline-text-3" id="text-1-12">
+<p>
+Add the property <code>empty</code> to the <code>Cage</code> class with a getter that returns a <code>Boolean</code>
+indicating whether the <code>Cage</code> contains any Hamsters:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">class</span> <span style="color: #986801;">Hamster</span>(<span style="color: #e45649;">val</span> <span style="color: #6a1868;">name</span>: <span style="color: #986801;">String</span>) {
+  <span style="color: #e45649;">override</span> <span style="color: #e45649;">fun</span> <span style="color: #a626a4;">toString</span>(): <span style="color: #986801;">String</span> {
+    <span style="color: #e45649;">return</span> <span style="color: #50a14f;">"Hamster('</span><span style="color: #6a1868;">$name</span><span style="color: #50a14f;">')"</span>
+  }
+}
+
+<span style="color: #e45649;">class</span> <span style="color: #986801;">Cage</span>(<span style="color: #e45649;">private</span> <span style="color: #e45649;">val</span> <span style="color: #6a1868;">maxCapacity</span>: <span style="color: #986801;">Int</span>) {
+  <span style="color: #e45649;">private</span> <span style="color: #e45649;">val</span> <span style="color: #6a1868;">hamsters</span> =
+    mutableListOf&lt;<span style="color: #986801;">Hamster&gt;</span>()
+
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">capacity</span>: <span style="color: #986801;">Int</span>
+    <span style="color: #e45649;">get</span>() = maxCapacity - hamsters.size
+
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">full</span>: <span style="color: #986801;">Boolean</span>
+    <span style="color: #e45649;">get</span>() = hamsters.size == maxCapacity
+
+  <span style="color: #9ca0a4;">/* </span><span style="color: #9ca0a4;">add 'empty' property here */</span>
+
+  <span style="color: #e45649;">fun</span> <span style="color: #a626a4;">put</span>(hamster: <span style="color: #986801;">Hamster</span>): <span style="color: #986801;">Boolean</span> =
+    <span style="color: #e45649;">if</span> (full)
+      <span style="color: #b751b6;">false</span>
+    <span style="color: #e45649;">else</span> {
+      hamsters += hamster
+      <span style="color: #b751b6;">true</span>
+    }
+
+  <span style="color: #e45649;">fun</span> <span style="color: #a626a4;">takeHamster</span>(): <span style="color: #986801;">Hamster</span> =
+    hamsters.removeAt(<span style="color: #da8548; font-weight: bold;">0</span>)
+}
+
+<span style="color: #e45649;">fun</span> <span style="color: #a626a4;">main</span>() {
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">cage</span> = <span style="color: #986801;">Cage</span>(<span style="color: #da8548; font-weight: bold;">2</span>)
+  <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">cage.empty eq true</span>
+  cage.put(<span style="color: #986801;">Hamster</span>(<span style="color: #50a14f;">"Alice"</span>))
+  <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">cage.empty eq false</span>
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org520ad2b" class="outline-3">
+<h3 id="org520ad2b"><span class="section-number-3">1.13.</span> Property Accessors (#2)</h3>
+<div class="outline-text-3" id="text-1-13">
+<p>
+Create a class <code>Accessible</code> containing <code>String</code> properties <code>mutable</code> and <code>readOnly</code>. Add
+the appropriate custom property accessors to make each property fit its name.
+</p>
+
+<p>
+Initialize the <code>mutable</code> property with an empty <code>String</code>. Its accessors should
+display <code>mutable:get</code> and <code>mutable:set</code>. The <code>readOnly</code> property should display
+<code>readOnly:get</code> and return the value of mutable.
+</p>
+
+<p>
+The following <code>main</code> function:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">fun</span> <span style="color: #a626a4;">main</span>() {
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">accessible</span> = <span style="color: #986801;">Accessible</span>()
+  accessible.mutable = <span style="color: #50a14f;">"abc"</span>
+  println(accessible.readOnly)
+}
+</pre>
+</div>
+<p>
+should display:
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">mutable:set
+readOnly:get
+mutable:get
+abc
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdf4d719" class="outline-3">
+<h3 id="orgdf4d719"><span class="section-number-3">1.14.</span> Property Accessors (#3)</h3>
+<div class="outline-text-3" id="text-1-14">
+<p>
+Create a class <code>AccessCounter</code> containing a property <code>val accesses</code> which tells how many
+times this property was accessed:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">class</span> <span style="color: #986801;">AccessCounter</span> {
+
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">accesses</span>: <span style="color: #986801;">Int</span>
+    <span style="color: #e45649;">get</span>() = <span style="color: #986801;">TODO</span>()
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge859b3a" class="outline-3">
+<h3 id="orge859b3a"><span class="section-number-3">1.15.</span> Extension Functions</h3>
+<div class="outline-text-3" id="text-1-15">
+<p>
+Implement <code>isOdd()</code> and <code>isEven()</code> as <code>Int</code> extension functions that produce a <code>Boolean</code>
+indicating whether that <code>Int</code> is odd or even, respectively. We assume that the
+input number is positive.
+</p>
+</div>
+</div>
+<div id="outline-container-org35bad50" class="outline-3">
+<h3 id="org35bad50"><span class="section-number-3">1.16.</span> Data classes (#1)</h3>
+<div class="outline-text-3" id="text-1-16">
+<p>
+Create a data class called <code>AirlineTicket</code> containing the following fields:
+</p>
+<ul class="org-ul">
+<li><code>firstName: String</code></li>
+<li><code>lastName: String</code></li>
+<li><code>ticket: Int</code></li>
+<li><code>origin: String</code></li>
+<li><code>destination: String</code></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orge0d6ccf" class="outline-3">
+<h3 id="orge0d6ccf"><span class="section-number-3">1.17.</span> Data Classes (#2)</h3>
+<div class="outline-text-3" id="text-1-17">
+<p>
+Create an extension function called <code>transferTicket()</code> that copies an <code>AirlineTicket</code> object, replacing <code>firstName</code> and <code>lastName</code> with the new values during the copy:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">fun</span> <span style="color: #986801;">AirlineTicket.transferTicket</span>(
+  otherFirstName: <span style="color: #986801;">String</span>,
+  otherLastName: <span style="color: #986801;">String</span>
+): <span style="color: #986801;">AirlineTicket</span> {
+    <span style="color: #986801;">TODO</span>()
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orga5df81b" class="outline-3">
+<h3 id="orga5df81b"><span class="section-number-3">1.18.</span> Destructuring Declarations</h3>
+<div class="outline-text-3" id="text-1-18">
+<p>
+The starter code below contains a data class <code>Person</code> with two properties:
+<code>name:String</code> and <code>age:Int</code>. Write a <code>displayPersonInfo()</code> function that takes a
+parameter of <code>person: Person</code> and display the corresponding values on the console:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #986801;">Name</span>: $name
+<span style="color: #986801;">Age</span>: $age
+</pre>
+</div>
+
+<p>
+Add a new second property <code>surname</code> between <code>name</code> and <code>age</code> in <code>Person</code>. The first
+property should be <code>name</code> and the third property should be <code>age</code>. Don’t modify
+<code>displayPersonInfo()</code>. In <code>main()</code>, show that <code>displayPersonInfo()</code> now works
+incorrectly.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">data</span> <span style="color: #e45649;">class</span> <span style="color: #986801;">Person</span>(
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">name</span>: <span style="color: #986801;">String</span>,
+  <span style="color: #9ca0a4;">// </span><span style="color: #986801; font-weight: bold;">TODO:</span><span style="color: #9ca0a4;"> add property here</span>
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">age</span>: <span style="color: #986801;">Int</span>
+)
+
+<span style="color: #e45649;">fun</span> <span style="color: #a626a4;">displayPersonInfo</span>(person: <span style="color: #986801;">Person</span>) {
+<span style="color: #9ca0a4;">// </span><span style="color: #986801; font-weight: bold;">TODO</span>
+}
+
+<span style="color: #e45649;">fun</span> <span style="color: #a626a4;">main</span>() {
+<span style="color: #e45649;">val</span> <span style="color: #6a1868;">person</span> = <span style="color: #986801;">Person</span>(<span style="color: #50a14f;">"Alice"</span>,  <span style="color: #da8548; font-weight: bold;">30</span>)
+<span style="color: #9ca0a4;">//  </span><span style="color: #9ca0a4;">val </span><span style="color: #6a1868;">person</span><span style="color: #9ca0a4;"> = Person("Alice", "Johnson", 30)</span>
+  displayPersonInfo(person)
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org36dd361" class="outline-3">
+<h3 id="org36dd361"><span class="section-number-3">1.19.</span> Companion Objects (#1)</h3>
+<div class="outline-text-3" id="text-1-19">
+<p>
+Begin with these two interfaces:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">interface</span> <span style="color: #986801;">BoardGame</span> {
+  <span style="color: #e45649;">fun</span> <span style="color: #a626a4;">move</span>(): <span style="color: #986801;">Boolean</span>
+  <span style="color: #e45649;">companion</span> <span style="color: #e45649;">object</span> {
+    <span style="color: #e45649;">fun</span> <span style="color: #a626a4;">createBoard</span>() {
+      println(<span style="color: #50a14f;">"BoardGame.createBoard()"</span>)
+    }
+  }
+}
+
+<span style="color: #e45649;">interface</span> <span style="color: #986801;">GameFactory</span> {
+  <span style="color: #e45649;">fun</span> <span style="color: #a626a4;">create</span>(): <span style="color: #986801;">BoardGame</span>
+}
+</pre>
+</div>
+<p>
+Create two classes, <code>Checkers</code> and <code>Chess</code>, which inherit <code>BoardGame</code>. Give them
+both <b>private constructors</b> with no arguments. Each class should contain a
+companion object <code>Factory: GameFactory</code> that calls <code>createBoard()</code> in its
+constructor. Each companion object contains a <code>const val max</code> that is used within
+<code>move()</code>. The definitions of <code>playGame()</code> and <code>main()</code> are:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">fun</span> <span style="color: #a626a4;">playGame</span>(factory: <span style="color: #986801;">GameFactory</span>) {
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">s</span> = factory.create()
+  <span style="color: #e45649;">while</span> (s.move())
+    ;
+}
+
+<span style="color: #e45649;">fun</span> <span style="color: #a626a4;">main</span>() {
+  playGame(<span style="color: #986801;">Checkers.Factory</span>)
+  playGame(<span style="color: #986801;">Chess.Factory</span>)
+}
+</pre>
+</div>
+<p>
+Write the classes <code>Checkers</code> and <code>Chess</code> so as to obtain the following output:
+</p>
+<div class="org-src-container">
+<pre class="src src-nil">BoardGame.createBoard()
+Checkers move 0
+Checkers move 1
+Checkers move 2
+BoardGame.createBoard()
+Chess move 0
+Chess move 1
+Chess move 2
+Chess move 3
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org8cc0eec" class="outline-2">
+<h2 id="org8cc0eec"><span class="section-number-2">2.</span> Concepts objets en Kotlin</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Dans cette partie vous écrirez chacune des classes dans un fichier à part entière.
+</p>
+</div>
+<div id="outline-container-org533c500" class="outline-3">
+<h3 id="org533c500"><span class="section-number-3">2.1.</span> Creation de classe</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Écrire une classe <code>Personne</code> avec des attributs <code>nom</code>, <code>age</code>, et <code>email</code>, et une méthode <code>presentation()</code> qui affiche une présentation courte de la personne (par exemple, <code>"Bonjour, je suis Albert et j'ai 22 ans"</code>).
+</p>
+
+<p>
+Exemple d’utilisation:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">val</span> <span style="color: #6a1868;">personne</span> = <span style="color: #986801;">Personne</span>(<span style="color: #50a14f;">"Turing"</span>, <span style="color: #50a14f;">"Alan"</span>, <span style="color: #da8548; font-weight: bold;">112</span>, <span style="color: #50a14f;">"alan.turing@cam.ac.uk"</span>)
+personne.presentation()
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-nil">Bonjour, je m'appelle Alan Turing, j'ai 112 ans, et je suis joignable à alan.turing@cam.ac.uk.
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf69aaf8" class="outline-3">
+<h3 id="orgf69aaf8"><span class="section-number-3">2.2.</span> Héritage</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Écrire une classe <code>Etudiant</code> qui hérite de la classe <code>Personne</code>. Ajoutez les
+attributs suivants:
+</p>
+<ul class="org-ul">
+<li><code>netu</code>, attribut <b>privé</b> de type <code>Int</code> pour le numéro d’étudiant;</li>
+<li><code>diplome</code>, le diplôme préparé de type <code>String</code>.</li>
+</ul>
+<p>
+Réécrire la méthode <code>presentation</code> pour <i>compléter</i> la présentation de l’étudiant.
+Le cas échéant, vous adapterez la classe <code>Personne</code> pour permettre
+l’implémentation de <code>Etudiant</code>.
+</p>
+
+<p>
+Exemple d’utilisation:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">val</span> <span style="color: #6a1868;">jimmyPage</span> = <span style="color: #986801;">Etudiant1</span>(<span style="color: #50a14f;">"Page"</span>, <span style="color: #50a14f;">"Jimmy"</span>, <span style="color: #da8548; font-weight: bold;">79</span>, <span style="color: #50a14f;">"Jimmy.Page.etu@univ-lille.fr"</span>, <span style="color: #da8548; font-weight: bold;">53498</span>, <span style="color: #50a14f;">"BUT Guitare"</span>)
+jimmyPage.presentation()
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-nil">Bonjour, je m'appelle Jimmy Page, j'ai 79 ans, et je suis joignable à Jimmy.Page.etu@univ-lille.fr.
+Mon numéro d'étudiant est 53498 et je prépare le diplôme de BUT Guitare.
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org2051984" class="outline-3">
+<h3 id="org2051984"><span class="section-number-3">2.3.</span> Abstraction</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Écrire une classe <b>abstraite</b> <code>Universite</code> d’attributs
+</p>
+<ul class="org-ul">
+<li><code>nom</code>, le nom de l’université de type <code>String</code> (par expl. <code>Université de Lille</code>);</li>
+<li><code>nom_domaine</code>, le nom de domaine de type <code>String</code> de l’université (par expl.
+<code>univ-lille.fr</code>).</li>
+</ul>
+<p>
+Écrire ensuite une classe <code>Composante</code> qui hérite d’<code>Universite</code> avec les attributs
+complémentaires suivants:
+</p>
+<ul class="org-ul">
+<li><code>nom</code>, le nom de la composante (par expl. <code>IUT de Lille</code>);</li>
+<li><code>batiment</code>, le bâtiment qui héberge la composante (par expl. <code>bâtiment A</code>).</li>
+</ul>
+<p>
+Par ailleurs, l’attribut <code>nom</code> de la classe <code>Universite</code> héritée devra être
+accessible à travers un attribut <code>universite</code>.
+</p>
+
+<p>
+Exemple d’utilisation:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">val</span> <span style="color: #6a1868;">iut</span> = <span style="color: #986801;">Composante</span>(<span style="color: #50a14f;">"Université de Lille"</span>, <span style="color: #50a14f;">"univ-lille.fr"</span>, <span style="color: #50a14f;">"IUT de Lille"</span>, <span style="color: #50a14f;">"A"</span>)
+println(iut)
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-nil">Composante IUT de Lille de Université de Lille, située dans le bâtiment A.
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org2be7a9c" class="outline-3">
+<h3 id="org2be7a9c"><span class="section-number-3">2.4.</span> Héritage et attributs</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Modifier la classe <code>Etudiant</code> pour y inclure les  attributs suivants:
+</p>
+<ul class="org-ul">
+<li><code>etablissement</code> de type <code>Composante</code>;</li>
+<li><code>identifiant</code>, de type <code>String</code>, l’identifiant de connexion sur l’intranet, qui
+sera toujours composé du prénom suivi d’un point et du nom (par expl. <code>Bob.Dylan</code>)</li>
+</ul>
+<p>
+Enfin, on fera en sorte que l’email soit toujours de la forme <code>&lt;identifiant&gt;.etu@&lt;nom_domaine&gt;</code> (par expl. <code>Bob.Dylan.etu@univ-lille.fr</code>).
+</p>
+
+<p>
+Exemple d’utilisation:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">val</span> <span style="color: #6a1868;">guyDebord</span> = <span style="color: #986801;">Etudiant</span>(<span style="color: #50a14f;">"Debord"</span>, <span style="color: #50a14f;">"Guy"</span>, <span style="color: #da8548; font-weight: bold;">92</span>, iut, <span style="color: #da8548; font-weight: bold;">12345</span>, <span style="color: #50a14f;">"BUT Spectacle"</span>)
+    guyDebord.presentation()
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-nil">Bonjour, je m'appelle Guy Debord, j'ai 92 ans, et je suis joignable à Guy.Debord.etu@univ-lille.fr.
+Mon numéro d'étudiant est 12345, je prépare le diplôme de BUT Spectacle.
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgcc198e0" class="outline-3">
+<h3 id="orgcc198e0"><span class="section-number-3">2.5.</span> Data classe</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+On aimerait que la liste des diplômes délivrés par une composantes soit une propriété de la composante.
+Définir une <i>data</i> classe <code>Diplomes</code> ayant 3 attributs:
+</p>
+<ul class="org-ul">
+<li>un <code>grade</code> (ie. Licence, Master ou Doctorat) de type <code>Grade</code> (ie. une énumération des grades sus-cités)</li>
+<li>un <code>nom</code> de type <code>String</code> (par expl. «&nbsp;BUT&nbsp;»)</li>
+<li>une <code>mention</code> de type <code>String</code> (par exemple «&nbsp;Informatique&nbsp;»)</li>
+</ul>
+
+<p>
+Ajouter ensuite à la classe <code>Composante</code> un attribut <code>diplomes</code> qui stocke les
+diplômes délivrés par la composante, et une méthode <code>lesDiplomes</code> qui affiche, pour un grade passé en paramètre, les diplomes délivrés dans cette composante pour ce grade.
+</p>
+
+<p>
+Exemple d’utilisation:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">val</span> <span style="color: #6a1868;">diplomes</span> = listOf(<span style="color: #986801;">Diplome</span>(<span style="color: #50a14f;">"BUT"</span>, <span style="color: #50a14f;">"Informatique"</span>, <span style="color: #986801;">Grade.Licence</span>),
+                      <span style="color: #986801;">Diplome</span>(<span style="color: #50a14f;">"Master"</span>, <span style="color: #50a14f;">"QUALITÉ, HYGIÈNE, SÉCURITÉ"</span>, <span style="color: #986801;">Grade.Master</span>),
+                      <span style="color: #986801;">Diplome</span>(<span style="color: #50a14f;">"BUT"</span>, <span style="color: #50a14f;">"Biologie"</span>, <span style="color: #986801;">Grade.Licence</span>))
+
+<span style="color: #e45649;">val</span> <span style="color: #6a1868;">iut</span> = <span style="color: #986801;">Composante</span>(<span style="color: #50a14f;">"Université de Lille"</span>, <span style="color: #50a14f;">"univ-lille.fr"</span>, <span style="color: #50a14f;">"IUT de Lille"</span>, <span style="color: #50a14f;">"A"</span>, diplomes)
+iut.lesDiplomes(<span style="color: #986801;">Grade.Licence</span>)
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-nil">BUT Informatique
+BUT Biologie
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdbfd33a" class="outline-3">
+<h3 id="orgdbfd33a"><span class="section-number-3">2.6.</span> Constructeur</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+Il convient maintenant de modifier la classe <code>Etudiant</code> pour que l’attribut <code>diplome</code> soit de type <code>Diplome</code> (et non pas <code>String</code>).
+</p>
+
+<p>
+Le constructeur vérifiera que le diplome (non null) passé en paramètre 
+du contructeur soit en effet un diplôme délivré par la composante. 
+Sinon, <code>null</code> sera affecté à l’attribut <code>diplome</code>.
+</p>
+
+<p>
+Exemple d’utilisation:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">val</span> <span style="color: #6a1868;">josephSifakis</span> = <span style="color: #986801;">Etudiant</span>(<span style="color: #50a14f;">"Sifakis"</span>, <span style="color: #50a14f;">"Joseph"</span>,<span style="color: #da8548; font-weight: bold;">77</span>, iut, <span style="color: #da8548; font-weight: bold;">9999</span>, <span style="color: #986801;">Diplome</span>(<span style="color: #50a14f;">"BUT"</span>, <span style="color: #50a14f;">"Informatique"</span>, <span style="color: #986801;">Grade.Licence</span>))
+josephSifakis.presentation()
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-nil">Bonjour, je m'appelle Joseph Sifakis, j'ai 77 ans, et je suis joignable à Joseph.Sifakis.etu@univ-lille.fr.
+Mon numéro d'étudiant est 9999, je prépare le diplôme de BUT Informatique.
+</pre>
+</div>
+<p>
+alors que…
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">val</span> <span style="color: #6a1868;">jimmyPage</span> = <span style="color: #986801;">Etudiant</span>(<span style="color: #50a14f;">"Page"</span>, <span style="color: #50a14f;">"Jimmy"</span>,<span style="color: #da8548; font-weight: bold;">79</span>,iut, <span style="color: #da8548; font-weight: bold;">53498</span>, <span style="color: #986801;">Diplome</span>(<span style="color: #50a14f;">"BUT"</span>, <span style="color: #50a14f;">"Guitare"</span>, <span style="color: #986801;">Grade.Licence</span>))
+jimmyPage.presentation()
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-nil">Bonjour, je m'appelle Jimmy Page, j'ai 79 ans, et je suis joignable à Jimmy.Page.etu@univ-lille.fr.
+Mon numéro d'étudiant est 53498, je prépare le diplôme de null.
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org9c50cc9" class="outline-2">
+<h2 id="org9c50cc9"><span class="section-number-2">3.</span> Test Kotlin</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Reprennez les exercices de la deuxième partie du TP4. Terminez-les si ce n’est
+pas déjà fait et écrivez des tests JUnit pour chacune de vos fonctions
+(recherche linéaire et dichotomiques, et tris par insertion). Pour générer les
+tests, vous pouvez cliquer droit sur une classe puis <code>Generate...</code> et <code>Test...</code>.
+Sélectionnez éventuellement les méthodes que vous souhaitez tester et générer le
+fichier de test. Dans ce fichier, IntelliJ signalera <code>Unresolved reference:
+junit</code>. Utilisez le menu contextuel <code>Show Quick-Fixes</code> puis <code>Add 'JUnit5.8.1' to
+classpath</code> et <code>Ok</code>.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Auteur: Cédric Lhoussaine</p>
+</div>
+
+
+<protonpass-root-be45 data-protonpass-role="root" data-protonpass-theme="os"></protonpass-root-be45></body></html>

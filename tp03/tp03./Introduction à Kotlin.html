@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Introduction à Kotlin</title>
+<meta name="author" content="Cédric Lhoussaine">
+<meta name="generator" content="Org Mode">
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="Introduction%20%C3%A0%20Kotlin_files/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script id="MathJax-script" async="" src="Introduction%20%C3%A0%20Kotlin_files/tex-mml-chtml.js">
+</script>
+<link href="data:text/css,%3Ais(%5Bid*%3D'google_ads_iframe'%5D%2C%5Bid*%3D'taboola-'%5D%2C.taboolaHeight%2C.taboola-placeholder%2C%23top-ad%2C%23credential_picker_container%2C%23credentials-picker-container%2C%23credential_picker_iframe%2C%5Bid*%3D'google-one-tap-iframe'%5D%2C%23google-one-tap-popup-container%2C.google-one-tap__module%2C.google-one-tap-modal-div%2C%23amp_floatingAdDiv%2C%23ez-content-blocker-container)%20%7Bdisplay%3Anone!important%3Bmin-height%3A0!important%3Bheight%3A0!important%3B%7D" rel="stylesheet" type="text/css"><style type="text/css">.CtxtMenu_InfoClose {  top:.2em; right:.2em;}
+.CtxtMenu_InfoContent {  overflow:auto; text-align:left; font-size:80%;  padding:.4em .6em; border:1px inset; margin:1em 0px;  max-height:20em; max-width:30em; background-color:#EEEEEE;  white-space:normal;}
+.CtxtMenu_Info.CtxtMenu_MousePost {outline:none;}
+.CtxtMenu_Info {  position:fixed; left:50%; width:auto; text-align:center;  border:3px outset; padding:1em 2em; background-color:#DDDDDD;  color:black;  cursor:default; font-family:message-box; font-size:120%;  font-style:normal; text-indent:0; text-transform:none;  line-height:normal; letter-spacing:normal; word-spacing:normal;  word-wrap:normal; white-space:nowrap; float:none; z-index:201;  border-radius: 15px;                     /* Opera 10.5 and IE9 */  -webkit-border-radius:15px;               /* Safari and Chrome */  -moz-border-radius:15px;                  /* Firefox */  -khtml-border-radius:15px;                /* Konqueror */  box-shadow:0px 10px 20px #808080;         /* Opera 10.5 and IE9 */  -webkit-box-shadow:0px 10px 20px #808080; /* Safari 3 & Chrome */  -moz-box-shadow:0px 10px 20px #808080;    /* Forefox 3.5 */  -khtml-box-shadow:0px 10px 20px #808080;  /* Konqueror */  filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color="gray", Positive="true"); /* IE */}
+</style><style type="text/css">.CtxtMenu_MenuClose {  position:absolute;  cursor:pointer;  display:inline-block;  border:2px solid #AAA;  border-radius:18px;  -webkit-border-radius: 18px;             /* Safari and Chrome */  -moz-border-radius: 18px;                /* Firefox */  -khtml-border-radius: 18px;              /* Konqueror */  font-family: "Courier New", Courier;  font-size:24px;  color:#F0F0F0}
+.CtxtMenu_MenuClose span {  display:block; background-color:#AAA; border:1.5px solid;  border-radius:18px;  -webkit-border-radius: 18px;             /* Safari and Chrome */  -moz-border-radius: 18px;                /* Firefox */  -khtml-border-radius: 18px;              /* Konqueror */  line-height:0;  padding:8px 0 6px     /* may need to be browser-specific */}
+.CtxtMenu_MenuClose:hover {  color:white!important;  border:2px solid #CCC!important}
+.CtxtMenu_MenuClose:hover span {  background-color:#CCC!important}
+.CtxtMenu_MenuClose:hover:focus {  outline:none}
+</style><style type="text/css">.CtxtMenu_Menu {  position:absolute;  background-color:white;  color:black;  width:auto; padding:5px 0px;  border:1px solid #CCCCCC; margin:0; cursor:default;  font: menu; text-align:left; text-indent:0; text-transform:none;  line-height:normal; letter-spacing:normal; word-spacing:normal;  word-wrap:normal; white-space:nowrap; float:none; z-index:201;  border-radius: 5px;                     /* Opera 10.5 and IE9 */  -webkit-border-radius: 5px;             /* Safari and Chrome */  -moz-border-radius: 5px;                /* Firefox */  -khtml-border-radius: 5px;              /* Konqueror */  box-shadow:0px 10px 20px #808080;         /* Opera 10.5 and IE9 */  -webkit-box-shadow:0px 10px 20px #808080; /* Safari 3 & Chrome */  -moz-box-shadow:0px 10px 20px #808080;    /* Forefox 3.5 */  -khtml-box-shadow:0px 10px 20px #808080;  /* Konqueror */}
+.CtxtMenu_MenuItem {  padding: 1px 2em;  background:transparent;}
+.CtxtMenu_MenuArrow {  position:absolute; right:.5em; padding-top:.25em; color:#666666;  font-family: null; font-size: .75em}
+.CtxtMenu_MenuActive .CtxtMenu_MenuArrow {color:white}
+.CtxtMenu_MenuArrow.CtxtMenu_RTL {left:.5em; right:auto}
+.CtxtMenu_MenuCheck {  position:absolute; left:.7em;  font-family: null}
+.CtxtMenu_MenuCheck.CtxtMenu_RTL { right:.7em; left:auto }
+.CtxtMenu_MenuRadioCheck {  position:absolute; left: .7em;}
+.CtxtMenu_MenuRadioCheck.CtxtMenu_RTL {  right: .7em; left:auto}
+.CtxtMenu_MenuInputBox {  padding-left: 1em; right:.5em; color:#666666;  font-family: null;}
+.CtxtMenu_MenuInputBox.CtxtMenu_RTL {  left: .1em;}
+.CtxtMenu_MenuComboBox {  left:.1em; padding-bottom:.5em;}
+.CtxtMenu_MenuSlider {  left: .1em;}
+.CtxtMenu_SliderValue {  position:absolute; right:.1em; padding-top:.25em; color:#333333;  font-size: .75em}
+.CtxtMenu_SliderBar {  outline: none; background: #d3d3d3}
+.CtxtMenu_MenuLabel {  padding: 1px 2em 3px 1.33em;  font-style:italic}
+.CtxtMenu_MenuRule {  border-top: 1px solid #DDDDDD;  margin: 4px 3px;}
+.CtxtMenu_MenuDisabled {  color:GrayText}
+.CtxtMenu_MenuActive {  background-color: #606872;  color: white;}
+.CtxtMenu_MenuDisabled:focus {  background-color: #E8E8E8}
+.CtxtMenu_MenuLabel:focus {  background-color: #E8E8E8}
+.CtxtMenu_ContextMenu:focus {  outline:none}
+.CtxtMenu_ContextMenu .CtxtMenu_MenuItem:focus {  outline:none}
+.CtxtMenu_SelectionMenu {  position:relative; float:left;  border-bottom: none; -webkit-box-shadow:none; -webkit-border-radius:0px; }
+.CtxtMenu_SelectionItem {  padding-right: 1em;}
+.CtxtMenu_Selection {  right: 40%; width:50%; }
+.CtxtMenu_SelectionBox {  padding: 0em; max-height:20em; max-width: none;  background-color:#FFFFFF;}
+.CtxtMenu_SelectionDivider {  clear: both; border-top: 2px solid #000000;}
+.CtxtMenu_Menu .CtxtMenu_MenuClose {  top:-10px; left:-10px}
+</style><style id="MJX-CHTML-styles">
+mjx-container[jax="CHTML"] {
+  line-height: 0;
+}
+
+mjx-container [space="1"] {
+  margin-left: .111em;
+}
+
+mjx-container [space="2"] {
+  margin-left: .167em;
+}
+
+mjx-container [space="3"] {
+  margin-left: .222em;
+}
+
+mjx-container [space="4"] {
+  margin-left: .278em;
+}
+
+mjx-container [space="5"] {
+  margin-left: .333em;
+}
+
+mjx-container [rspace="1"] {
+  margin-right: .111em;
+}
+
+mjx-container [rspace="2"] {
+  margin-right: .167em;
+}
+
+mjx-container [rspace="3"] {
+  margin-right: .222em;
+}
+
+mjx-container [rspace="4"] {
+  margin-right: .278em;
+}
+
+mjx-container [rspace="5"] {
+  margin-right: .333em;
+}
+
+mjx-container [size="s"] {
+  font-size: 70.7%;
+}
+
+mjx-container [size="ss"] {
+  font-size: 50%;
+}
+
+mjx-container [size="Tn"] {
+  font-size: 60%;
+}
+
+mjx-container [size="sm"] {
+  font-size: 85%;
+}
+
+mjx-container [size="lg"] {
+  font-size: 120%;
+}
+
+mjx-container [size="Lg"] {
+  font-size: 144%;
+}
+
+mjx-container [size="LG"] {
+  font-size: 173%;
+}
+
+mjx-container [size="hg"] {
+  font-size: 207%;
+}
+
+mjx-container [size="HG"] {
+  font-size: 249%;
+}
+
+mjx-container [width="full"] {
+  width: 100%;
+}
+
+mjx-box {
+  display: inline-block;
+}
+
+mjx-block {
+  display: block;
+}
+
+mjx-itable {
+  display: inline-table;
+}
+
+mjx-row {
+  display: table-row;
+}
+
+mjx-row > * {
+  display: table-cell;
+}
+
+mjx-mtext {
+  display: inline-block;
+}
+
+mjx-mstyle {
+  display: inline-block;
+}
+
+mjx-merror {
+  display: inline-block;
+  color: red;
+  background-color: yellow;
+}
+
+mjx-mphantom {
+  visibility: hidden;
+}
+
+_::-webkit-full-page-media, _:future, :root mjx-container {
+  will-change: opacity;
+}
+
+mjx-assistive-mml {
+  position: absolute !important;
+  top: 0px;
+  left: 0px;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 1px 0px 0px 0px !important;
+  border: 0px !important;
+  display: block !important;
+  width: auto !important;
+  overflow: hidden !important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+mjx-assistive-mml[display="block"] {
+  width: 100% !important;
+}
+
+mjx-math {
+  display: inline-block;
+  text-align: left;
+  line-height: 0;
+  text-indent: 0;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 100%;
+  font-size-adjust: none;
+  letter-spacing: normal;
+  border-collapse: collapse;
+  word-wrap: normal;
+  word-spacing: normal;
+  white-space: nowrap;
+  direction: ltr;
+  padding: 1px 0;
+}
+
+mjx-container[jax="CHTML"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="CHTML"][display="true"][width="full"] {
+  display: flex;
+}
+
+mjx-container[jax="CHTML"][display="true"] mjx-math {
+  padding: 0;
+}
+
+mjx-container[jax="CHTML"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="CHTML"][justify="right"] {
+  text-align: right;
+}
+
+mjx-mi {
+  display: inline-block;
+  text-align: left;
+}
+
+mjx-c {
+  display: inline-block;
+}
+
+mjx-utext {
+  display: inline-block;
+  padding: .75em 0 .2em 0;
+}
+
+mjx-mo {
+  display: inline-block;
+  text-align: left;
+}
+
+mjx-stretchy-h {
+  display: inline-table;
+  width: 100%;
+}
+
+mjx-stretchy-h > * {
+  display: table-cell;
+  width: 0;
+}
+
+mjx-stretchy-h > * > mjx-c {
+  display: inline-block;
+  transform: scalex(1.0000001);
+}
+
+mjx-stretchy-h > * > mjx-c::before {
+  display: inline-block;
+  width: initial;
+}
+
+mjx-stretchy-h > mjx-ext {
+  /* IE */ overflow: hidden;
+  /* others */ overflow: clip visible;
+  width: 100%;
+}
+
+mjx-stretchy-h > mjx-ext > mjx-c::before {
+  transform: scalex(500);
+}
+
+mjx-stretchy-h > mjx-ext > mjx-c {
+  width: 0;
+}
+
+mjx-stretchy-h > mjx-beg > mjx-c {
+  margin-right: -.1em;
+}
+
+mjx-stretchy-h > mjx-end > mjx-c {
+  margin-left: -.1em;
+}
+
+mjx-stretchy-v {
+  display: inline-block;
+}
+
+mjx-stretchy-v > * {
+  display: block;
+}
+
+mjx-stretchy-v > mjx-beg {
+  height: 0;
+}
+
+mjx-stretchy-v > mjx-end > mjx-c {
+  display: block;
+}
+
+mjx-stretchy-v > * > mjx-c {
+  transform: scaley(1.0000001);
+  transform-origin: left center;
+  overflow: hidden;
+}
+
+mjx-stretchy-v > mjx-ext {
+  display: block;
+  height: 100%;
+  box-sizing: border-box;
+  border: 0px solid transparent;
+  /* IE */ overflow: hidden;
+  /* others */ overflow: visible clip;
+}
+
+mjx-stretchy-v > mjx-ext > mjx-c::before {
+  width: initial;
+  box-sizing: border-box;
+}
+
+mjx-stretchy-v > mjx-ext > mjx-c {
+  transform: scaleY(500) translateY(.075em);
+  overflow: visible;
+}
+
+mjx-mark {
+  display: inline-block;
+  height: 0px;
+}
+
+mjx-mn {
+  display: inline-block;
+  text-align: left;
+}
+
+mjx-c::before {
+  display: block;
+  width: 0;
+}
+
+.MJX-TEX {
+  font-family: MJXZERO, MJXTEX;
+}
+
+.TEX-B {
+  font-family: MJXZERO, MJXTEX-B;
+}
+
+.TEX-I {
+  font-family: MJXZERO, MJXTEX-I;
+}
+
+.TEX-MI {
+  font-family: MJXZERO, MJXTEX-MI;
+}
+
+.TEX-BI {
+  font-family: MJXZERO, MJXTEX-BI;
+}
+
+.TEX-S1 {
+  font-family: MJXZERO, MJXTEX-S1;
+}
+
+.TEX-S2 {
+  font-family: MJXZERO, MJXTEX-S2;
+}
+
+.TEX-S3 {
+  font-family: MJXZERO, MJXTEX-S3;
+}
+
+.TEX-S4 {
+  font-family: MJXZERO, MJXTEX-S4;
+}
+
+.TEX-A {
+  font-family: MJXZERO, MJXTEX-A;
+}
+
+.TEX-C {
+  font-family: MJXZERO, MJXTEX-C;
+}
+
+.TEX-CB {
+  font-family: MJXZERO, MJXTEX-CB;
+}
+
+.TEX-FR {
+  font-family: MJXZERO, MJXTEX-FR;
+}
+
+.TEX-FRB {
+  font-family: MJXZERO, MJXTEX-FRB;
+}
+
+.TEX-SS {
+  font-family: MJXZERO, MJXTEX-SS;
+}
+
+.TEX-SSB {
+  font-family: MJXZERO, MJXTEX-SSB;
+}
+
+.TEX-SSI {
+  font-family: MJXZERO, MJXTEX-SSI;
+}
+
+.TEX-SC {
+  font-family: MJXZERO, MJXTEX-SC;
+}
+
+.TEX-T {
+  font-family: MJXZERO, MJXTEX-T;
+}
+
+.TEX-V {
+  font-family: MJXZERO, MJXTEX-V;
+}
+
+.TEX-VB {
+  font-family: MJXZERO, MJXTEX-VB;
+}
+
+mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
+  font-family: MJXZERO, MJXTEX-S1, MJXTEX-S4, MJXTEX, MJXTEX-A ! important;
+}
+
+@font-face /* 0 */ {
+  font-family: MJXZERO;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff") format("woff");
+}
+
+@font-face /* 1 */ {
+  font-family: MJXTEX;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff") format("woff");
+}
+
+@font-face /* 2 */ {
+  font-family: MJXTEX-B;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Bold.woff") format("woff");
+}
+
+@font-face /* 3 */ {
+  font-family: MJXTEX-I;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff") format("woff");
+}
+
+@font-face /* 4 */ {
+  font-family: MJXTEX-MI;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Italic.woff") format("woff");
+}
+
+@font-face /* 5 */ {
+  font-family: MJXTEX-BI;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-BoldItalic.woff") format("woff");
+}
+
+@font-face /* 6 */ {
+  font-family: MJXTEX-S1;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff") format("woff");
+}
+
+@font-face /* 7 */ {
+  font-family: MJXTEX-S2;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff") format("woff");
+}
+
+@font-face /* 8 */ {
+  font-family: MJXTEX-S3;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff") format("woff");
+}
+
+@font-face /* 9 */ {
+  font-family: MJXTEX-S4;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff") format("woff");
+}
+
+@font-face /* 10 */ {
+  font-family: MJXTEX-A;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff") format("woff");
+}
+
+@font-face /* 11 */ {
+  font-family: MJXTEX-C;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Regular.woff") format("woff");
+}
+
+@font-face /* 12 */ {
+  font-family: MJXTEX-CB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Bold.woff") format("woff");
+}
+
+@font-face /* 13 */ {
+  font-family: MJXTEX-FR;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Fraktur-Regular.woff") format("woff");
+}
+
+@font-face /* 14 */ {
+  font-family: MJXTEX-FRB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Fraktur-Bold.woff") format("woff");
+}
+
+@font-face /* 15 */ {
+  font-family: MJXTEX-SS;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_SansSerif-Regular.woff") format("woff");
+}
+
+@font-face /* 16 */ {
+  font-family: MJXTEX-SSB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_SansSerif-Bold.woff") format("woff");
+}
+
+@font-face /* 17 */ {
+  font-family: MJXTEX-SSI;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_SansSerif-Italic.woff") format("woff");
+}
+
+@font-face /* 18 */ {
+  font-family: MJXTEX-SC;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Script-Regular.woff") format("woff");
+}
+
+@font-face /* 19 */ {
+  font-family: MJXTEX-T;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Typewriter-Regular.woff") format("woff");
+}
+
+@font-face /* 20 */ {
+  font-family: MJXTEX-V;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Vector-Regular.woff") format("woff");
+}
+
+@font-face /* 21 */ {
+  font-family: MJXTEX-VB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Vector-Bold.woff") format("woff");
+}
+
+mjx-c.mjx-c1D45B.TEX-I::before {
+  padding: 0.442em 0.6em 0.011em 0;
+  content: "n";
+}
+
+mjx-c.mjx-c21::before {
+  padding: 0.716em 0.278em 0 0;
+  content: "!";
+}
+
+mjx-c.mjx-c3D::before {
+  padding: 0.583em 0.778em 0.082em 0;
+  content: "=";
+}
+
+mjx-c.mjx-c31::before {
+  padding: 0.666em 0.5em 0 0;
+  content: "1";
+}
+
+mjx-c.mjx-cD7::before {
+  padding: 0.491em 0.778em 0 0;
+  content: "\D7";
+}
+
+mjx-c.mjx-c32::before {
+  padding: 0.666em 0.5em 0 0;
+  content: "2";
+}
+
+mjx-c.mjx-c22EF::before {
+  padding: 0.31em 1.172em 0 0;
+  content: "\22EF";
+}
+
+mjx-c.mjx-c2B::before {
+  padding: 0.583em 0.778em 0.082em 0;
+  content: "+";
+}
+
+mjx-c.mjx-c2E::before {
+  padding: 0.12em 0.278em 0 0;
+  content: ".";
+}
+</style></head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Introduction à Kotlin
+<br>
+<span class="subtitle">BUT Informatique - S5 - Qualité de développement</span>
+</h1>
+<p>
+Dans ce TP vous allez utiliser IntelliJ. Vous pouvez réaliser tous les exercices
+dans un seul fichier. Vous avez simplement à créer un nouveau projet en
+sélectionnant Kotlin comme langage.
+</p>
+<div id="outline-container-org4663257" class="outline-2">
+<h2 id="org4663257"><span class="section-number-2">1.</span> Exercices d’échauffement</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Ces exercices sont extraits du livre <a href="https://leanpub.com/AtomicKotlin">Atomic Kotlin</a>. Il s’agit d’exercices très
+simples dont l’unique objectif est de mémoriser et vous familiariser avec la
+syntaxe et la sémantique des éléments de base de Kotlin.
+</p>
+</div>
+<div id="outline-container-orgdb751c3" class="outline-3">
+<h3 id="orgdb751c3"><span class="section-number-3">1.1.</span> <code>var</code> &amp; <code>val</code> (1)</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Define a val answer and set its value to 42. Display the value of answer on the
+console.
+</p>
+
+<p>
+On the next line, try to reassign answer to 43. What error does Kotlin produce?
+Fix the error by replacing val with var. Display the new value of answer on the
+console.
+</p>
+</div>
+</div>
+<div id="outline-container-org11f867b" class="outline-3">
+<h3 id="org11f867b"><span class="section-number-3">1.2.</span> <code>var</code> &amp; <code>val</code> (2)</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Define <code>var a = 10</code>.
+</p>
+
+<p>
+Now define a <code>val b = a</code>.
+</p>
+
+<p>
+Now assign 42 to <code>a</code> and display both <code>a</code> and <code>b</code> on different lines.
+</p>
+</div>
+</div>
+<div id="outline-container-orgb0b2cb6" class="outline-3">
+<h3 id="orgb0b2cb6"><span class="section-number-3">1.3.</span> <code>var</code> &amp; <code>val</code> (3)</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Define two vars: <code>x</code> and <code>y</code>. Swap their contents. First try <code>x = y, y = x</code>, then fix the erroneous solution:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">var</span> <span style="color: #6a1868;">x</span> = <span style="color: #da8548; font-weight: bold;">1</span>
+<span style="color: #e45649;">var</span> <span style="color: #6a1868;">y</span> = <span style="color: #da8548; font-weight: bold;">2</span>
+<span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">Perform swap here</span>
+println(x) <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">2</span>
+println(y) <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">1</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgbee9b0e" class="outline-3">
+<h3 id="orgbee9b0e"><span class="section-number-3">1.4.</span> Data types (1)</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+Declare a <code>var</code> called <code>answer</code> of type <code>Int</code> and set its value to 42. In the next
+line try to reassign <code>answer</code> to the <code>String "unknown"</code>. What error does Kotlin
+produce ?
+</p>
+
+<p>
+Remove the <code>Int</code> type specification. Does the error change ?
+</p>
+</div>
+</div>
+<div id="outline-container-org9d70527" class="outline-3">
+<h3 id="org9d70527"><span class="section-number-3">1.5.</span> Data types (2)</h3>
+<div class="outline-text-3" id="text-1-5">
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">fun</span> <span style="color: #a626a4;">main</span>() {
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">int</span>: <span style="color: #986801;">Int</span> = <span style="color: #da8548; font-weight: bold;">10</span>
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">double</span>: <span style="color: #986801;">Double</span> = <span style="color: #da8548; font-weight: bold;">1.1</span>
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">boolean</span>: <span style="color: #986801;">Boolean</span> = <span style="color: #b751b6;">false</span>
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">string</span>: <span style="color: #986801;">String</span> = <span style="color: #50a14f;">"abc"</span>
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">character</span>: <span style="color: #986801;">Char</span> = <span style="color: #50a14f;">'a'</span>
+
+  <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">Can be combined:</span>
+  <span style="color: #986801;">TODO</span>() <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">write some examples</span>
+
+  println(<span style="color: #50a14f;">"The type that can be combined "</span> + <span style="color: #50a14f;">"with every other type using '+':"</span>)
+  println(<span style="color: #50a14f;">"???"</span>)
+
+  <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">Can't be combined:</span>
+  <span style="color: #986801;">TODO</span>() <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">write some examples</span>
+}
+</pre>
+</div>
+<p>
+Attempt to combine various vals of different types using the + operator. Only
+combine two at a time, and assign each combination to a (explicitly typed) <code>val</code> result. See which
+types combine. On the console, display the name of the type that can be combined
+with any other type if it goes first.
+</p>
+
+<p>
+Replace the lines containing <code>TODO()</code> in the solution code with working code. If
+you don’t remove these lines, you’ll see an error saying «&nbsp;Operation is not
+implemented.&nbsp;»
+</p>
+</div>
+</div>
+<div id="outline-container-orge6bf8e4" class="outline-3">
+<h3 id="orge6bf8e4"><span class="section-number-3">1.6.</span> Data types (3)</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+Guess the results of the following expressions and then check your guesses using Kotlin:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">val</span> <span style="color: #6a1868;">c1</span> = <span style="color: #50a14f;">'a'</span> + <span style="color: #da8548; font-weight: bold;">1</span>
+<span style="color: #e45649;">val</span> <span style="color: #6a1868;">c2</span> = <span style="color: #50a14f;">'a'</span> + <span style="color: #da8548; font-weight: bold;">25</span>
+<span style="color: #e45649;">val</span> <span style="color: #6a1868;">c3</span> = <span style="color: #50a14f;">'E'</span> - <span style="color: #da8548; font-weight: bold;">2</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org4b61788" class="outline-3">
+<h3 id="org4b61788"><span class="section-number-3">1.7.</span> Data types (IntelliJ 1)</h3>
+<div class="outline-text-3" id="text-1-7">
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">fun</span> <span style="color: #a626a4;">main</span>() {
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">whole</span> = <span style="color: #da8548; font-weight: bold;">11</span>
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">fractional</span> = <span style="color: #da8548; font-weight: bold;">1.4</span>
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">trueOrFalse</span> = <span style="color: #b751b6;">true</span>
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">words</span> = <span style="color: #50a14f;">"A value"</span>
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">character</span> = <span style="color: #50a14f;">'z'</span>
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">lines</span> = <span style="color: #50a14f;">"""Triple quotes let</span>
+<span style="color: #50a14f;">you have many lines</span>
+<span style="color: #50a14f;">in your string"""</span>
+  println(whole)
+  println(fractional)
+  println(trueOrFalse)
+  println(words)
+  println(character)
+  println(lines)
+}
+</pre>
+</div>
+<p>
+If you put the caret on an identifier and press <code>Ctrl+Q</code>, you’ll check the type
+Kotlin infers for this identifier.
+</p>
+
+<p>
+Press <code>Echap</code> to close the pop-up.
+</p>
+
+<p>
+Check the types of all declared variables in the example.
+</p>
+</div>
+</div>
+<div id="outline-container-org86fac17" class="outline-3">
+<h3 id="org86fac17"><span class="section-number-3">1.8.</span> Data types (IntelliJ 2)</h3>
+<div class="outline-text-3" id="text-1-8">
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">fun</span> <span style="color: #a626a4;">main</span>() {
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">s</span> = <span style="color: #50a14f;">"Sally"</span> + <span style="color: #da8548; font-weight: bold;">5.9</span>
+  println(s)
+}
+</pre>
+</div>
+<p>
+IntelliJ IDEA helps you automatically add type specifications for vals and vars.
+Put the caret right after <code>s</code> and press <code>Alt+Entrée</code>. This is the shortcut for <code>Show
+intention actions</code>. Choose <code>Specify type explicitly</code> in the dropdown menu.
+</p>
+
+<p>
+Different intention actions are available in different contexts, depending on
+where you put the caret.
+</p>
+</div>
+</div>
+<div id="outline-container-org8854aed" class="outline-3">
+<h3 id="org8854aed"><span class="section-number-3">1.9.</span> Functions (1)</h3>
+<div class="outline-text-3" id="text-1-9">
+<p>
+Create a function <code>squareInt()</code> that takes an <code>Int</code> parameter and returns its
+mathematical square. Test it.
+</p>
+</div>
+</div>
+<div id="outline-container-org80d85aa" class="outline-3">
+<h3 id="org80d85aa"><span class="section-number-3">1.10.</span> Functions (2)</h3>
+<div class="outline-text-3" id="text-1-10">
+<p>
+Create a function <code>sumDoubles()</code> that takes three <code>Double</code> parameters and returns
+their sum. Test it.
+</p>
+</div>
+</div>
+<div id="outline-container-org741e666" class="outline-3">
+<h3 id="org741e666"><span class="section-number-3">1.11.</span> Functions (3)</h3>
+<div class="outline-text-3" id="text-1-11">
+<p>
+Create a function <code>duplicate()</code> that takes a <code>String</code> parameter and returns that
+<code>String</code> repeated twice. Test it.
+</p>
+</div>
+</div>
+<div id="outline-container-org34c3a1c" class="outline-3">
+<h3 id="org34c3a1c"><span class="section-number-3">1.12.</span> Functions (IntelliJ)</h3>
+<div class="outline-text-3" id="text-1-12">
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">fun</span> <span style="color: #a626a4;">foo</span>(): <span style="color: #986801;">String</span> {
+  <span style="color: #e45649;">return</span> <span style="color: #50a14f;">"abc"</span>
+}
+
+<span style="color: #e45649;">fun</span> <span style="color: #a626a4;">main</span>() {
+  println(foo())
+}
+</pre>
+</div>
+<p>
+You can automatically convert a function with a <b>block body</b> to a function with an
+<b>expression body</b>, and vice versa. Put the caret somewhere on the <code>return</code> keyword,
+press <code>Alt+Entrée</code> to call the intention actions menu, and choose <code>Convert to
+expression body</code>. After the conversion the type remains highlighted, which is
+convenient because you can either remove the type declaration by pressing <code>Delete</code>
+or leave it by moving the caret to the right.
+</p>
+
+<p>
+To apply the reverse intention, press <code>Alt+Entrée</code> on the equal sign on the
+function with expression body and choose the reverse conversion.
+</p>
+</div>
+</div>
+<div id="outline-container-org3740586" class="outline-3">
+<h3 id="org3740586"><span class="section-number-3">1.13.</span> If (1)</h3>
+<div class="outline-text-3" id="text-1-13">
+<p>
+Create a function <code>checkSign()</code> <b>with an expression body</b> that checks whether an
+integer number is positive, negative, or zero, and returns a <code>String</code> <code>"positive"</code>,
+<code>"negative"</code> or <code>"zero"</code> as a result.
+</p>
+</div>
+</div>
+<div id="outline-container-orgec461c9" class="outline-3">
+<h3 id="orgec461c9"><span class="section-number-3">1.14.</span> If (2)</h3>
+<div class="outline-text-3" id="text-1-14">
+<p>
+Create a function <code>abs()</code> <b>with an expression body</b> that returns the absolute value
+of its parameter: for example, <code>abs(3)</code> is <code>3</code> and <code>abs(-5)</code> is <code>5</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-orgdb89fbe" class="outline-3">
+<h3 id="orgdb89fbe"><span class="section-number-3">1.15.</span> If (3)</h3>
+<div class="outline-text-3" id="text-1-15">
+<p>
+Create a function <code>findMax()</code> that finds the maximum value when given two integer arguments.
+</p>
+</div>
+</div>
+<div id="outline-container-org20e8c89" class="outline-3">
+<h3 id="org20e8c89"><span class="section-number-3">1.16.</span> If (IntelliJ)</h3>
+<div class="outline-text-3" id="text-1-16">
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">fun</span> <span style="color: #a626a4;">oneOrTheOther</span>(exp: <span style="color: #986801;">Boolean</span>) =
+  <span style="color: #e45649;">if</span> (exp)
+    <span style="color: #50a14f;">"True!"</span>
+  <span style="color: #e45649;">else</span>
+    <span style="color: #50a14f;">"False"</span>
+
+<span style="color: #e45649;">fun</span> <span style="color: #a626a4;">main</span>() {
+  <span style="color: #e45649;">val</span> <span style="color: #6a1868;">x</span> = <span style="color: #da8548; font-weight: bold;">1</span>
+  println(oneOrTheOther(x == <span style="color: #da8548; font-weight: bold;">1</span>))  <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">True!</span>
+}
+</pre>
+</div>
+<p>
+To navigate to a function definition, put the caret on the usage and press
+<code>Ctrl+B</code>. Alternatively, you can click on the symbol while holding the <code>Ctrl</code> key
+(or the Command key on Mac).
+</p>
+
+<p>
+Put the caret on the <code>oneOrTheOther()</code> function call in <code>main()</code> and navigate to the
+function definition.
+</p>
+</div>
+</div>
+<div id="outline-container-orgc2c69fb" class="outline-3">
+<h3 id="orgc2c69fb"><span class="section-number-3">1.17.</span> String template (1)</h3>
+<div class="outline-text-3" id="text-1-17">
+<p>
+Display the result of the function <code>findMax()</code> (from the exercises in the previous
+atom) on the console in the form <code>"The maximum of x and y is max."</code> Use a String
+template to perform the substitution of <code>x</code>, <code>y</code> and the maximum value.
+</p>
+</div>
+</div>
+<div id="outline-container-org4f37c92" class="outline-3">
+<h3 id="org4f37c92"><span class="section-number-3">1.18.</span> String template (2)</h3>
+<div class="outline-text-3" id="text-1-18">
+<p>
+Implement a <code>record()</code> function that returns a <code>String</code> in the form: <code>index [status]
+message</code> , where <code>index</code>, <code>status</code> and <code>message</code> are passed into <code>record()</code> as parameters. <code>record()</code> should
+add a line break (<code>\n</code>) at the end of the <code>String</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-orgfe3fa0e" class="outline-3">
+<h3 id="orgfe3fa0e"><span class="section-number-3">1.19.</span> String template (3)</h3>
+<div class="outline-text-3" id="text-1-19">
+<p>
+Write a function <code>show()</code> with parameters <code>i: Int, s: String, c: Char</code> and <code>d:
+Double</code>. On the console, <code>show()</code> displays the value of each parameter on its own
+line: first the name of the identifier, then a colon and a space, and then the
+value of that identifier. Surround the <code>String</code> value with double quotes and the
+<code>Char</code> value with single quotes.
+</p>
+
+<p>
+Sample output for <code>show(10, "abc", 'a', 1.0)</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin">i: <span style="color: #da8548; font-weight: bold;">10</span>
+s: <span style="color: #50a14f;">"abc"</span>
+c: <span style="color: #50a14f;">'a'</span>
+d: <span style="color: #da8548; font-weight: bold;">1.0</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org36d29b1" class="outline-3">
+<h3 id="org36d29b1"><span class="section-number-3">1.20.</span> While (1)</h3>
+<div class="outline-text-3" id="text-1-20">
+<p>
+Using a <code>while</code> loop, write a function <code>displayContent()</code> that takes a <code>String</code>
+parameter and displays each character on its own line (<code>s[i]</code> denotes the
+character of index <code>i</code> in string <code>s</code>).
+</p>
+</div>
+</div>
+<div id="outline-container-org4a28c06" class="outline-3">
+<h3 id="org4a28c06"><span class="section-number-3">1.21.</span> While (2)</h3>
+<div class="outline-text-3" id="text-1-21">
+<p>
+Using a <code>while</code> loop, write a function <code>sum</code> that sums the integral numbers from zero up
+to and including a given number (the parameter).
+</p>
+</div>
+</div>
+<div id="outline-container-orgd23ef10" class="outline-3">
+<h3 id="orgd23ef10"><span class="section-number-3">1.22.</span> While (3)</h3>
+<div class="outline-text-3" id="text-1-22">
+<p>
+Using a while loop, write a function <code>sumEven</code> that sums only even numbers up to and
+including a given number (the parameter).
+</p>
+</div>
+</div>
+<div id="outline-container-org8de8740" class="outline-3">
+<h3 id="org8de8740"><span class="section-number-3">1.23.</span> While (IntelliJ)</h3>
+<div class="outline-text-3" id="text-1-23">
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">fun</span> <span style="color: #a626a4;">getFooResult</span>(): <span style="color: #986801;">Int</span> = <span style="color: #da8548; font-weight: bold;">736</span>
+
+<span style="color: #e45649;">fun</span> <span style="color: #a626a4;">main</span>() {
+  println(<span style="color: #50a14f;">"Foo result is: ${</span>getFooResult()<span style="color: #50a14f;">}"</span>)
+}
+</pre>
+</div>
+<p>
+IntelliJ IDEA can extract a <code>val</code> or <code>var</code> automatically. Select the expression
+<code>getFooResult()</code> inside a string template, then do one of the following:
+</p>
+<ul class="org-ul">
+<li>Invoke Find action (by pressing <code>Ctrl+Maj+A</code>), then type <code>Extract variable</code> to find the corresponding action</li>
+<li>Press <code>Ctrl+Alt+V</code></li>
+<li>Choose <code>Refactor | Extract | Variable...</code> in the application menu.</li>
+</ul>
+<p>
+Type the name of the new variable. IntelliJ IDEA tries to suggest a name based
+on the expression. Press <code>Entrée</code> to finish.
+</p>
+</div>
+</div>
+<div id="outline-container-org5961e94" class="outline-3">
+<h3 id="org5961e94"><span class="section-number-3">1.24.</span> Looping and range (1)</h3>
+<div class="outline-text-3" id="text-1-24">
+<p>
+Using a <code>for</code> loop, create a function <code>factorial</code> that calculates the factorial of its
+parameter (<mjx-container class="MathJax CtxtMenu_Attached_0" jax="CHTML" style="font-size: 121.1%; position: relative;" tabindex="0" ctxtmenu_counter="0"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mi class="mjx-i"><mjx-c class="mjx-c1D45B TEX-I"></mjx-c></mjx-mi><mjx-mo class="mjx-n"><mjx-c class="mjx-c21"></mjx-c></mjx-mo><mjx-mo class="mjx-n" space="4"><mjx-c class="mjx-c3D"></mjx-c></mjx-mo><mjx-mn class="mjx-n" space="4"><mjx-c class="mjx-c31"></mjx-c></mjx-mn><mjx-mo class="mjx-n" space="3"><mjx-c class="mjx-cD7"></mjx-c></mjx-mo><mjx-mn class="mjx-n" space="3"><mjx-c class="mjx-c32"></mjx-c></mjx-mn><mjx-mo class="mjx-n" space="3"><mjx-c class="mjx-cD7"></mjx-c></mjx-mo><mjx-mo class="mjx-n" space="3"><mjx-c class="mjx-c22EF"></mjx-c></mjx-mo><mjx-mo class="mjx-n" space="3"><mjx-c class="mjx-cD7"></mjx-c></mjx-mo><mjx-mi class="mjx-i" space="3"><mjx-c class="mjx-c1D45B TEX-I"></mjx-c></mjx-mi></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi><mo>!</mo><mo>=</mo><mn>1</mn><mo>×</mo><mn>2</mn><mo>×</mo><mo>⋯</mo><mo>×</mo><mi>n</mi></math></mjx-assistive-mml></mjx-container>).
+</p>
+
+<p>
+Put an <code>L</code> at the end of a number literal or use <code>.toLong()</code> to convert an integer
+constant or expression to type <code>Long</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-org1a707ea" class="outline-3">
+<h3 id="org1a707ea"><span class="section-number-3">1.25.</span> Looping and range (2)</h3>
+<div class="outline-text-3" id="text-1-25">
+<p>
+Using a <code>for</code> loop, create a function <code>sumOfFactorials</code> that sums the factorials up to its parameter
+(<mjx-container class="MathJax CtxtMenu_Attached_0" jax="CHTML" style="font-size: 121.1%; position: relative;" tabindex="0" ctxtmenu_counter="1"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mn class="mjx-n"><mjx-c class="mjx-c31"></mjx-c></mjx-mn><mjx-mo class="mjx-n"><mjx-c class="mjx-c21"></mjx-c></mjx-mo><mjx-mo class="mjx-n" space="3"><mjx-c class="mjx-c2B"></mjx-c></mjx-mo><mjx-mn class="mjx-n" space="3"><mjx-c class="mjx-c32"></mjx-c></mjx-mn><mjx-mo class="mjx-n"><mjx-c class="mjx-c21"></mjx-c></mjx-mo><mjx-mo class="mjx-n"><mjx-c class="mjx-c2B"></mjx-c></mjx-mo><mjx-mo class="mjx-n"><mjx-c class="mjx-c2E"></mjx-c></mjx-mo><mjx-mo class="mjx-n" space="2"><mjx-c class="mjx-c2E"></mjx-c></mjx-mo><mjx-mo class="mjx-n" space="2"><mjx-c class="mjx-c2E"></mjx-c></mjx-mo><mjx-mo class="mjx-n" space="2"><mjx-c class="mjx-c2B"></mjx-c></mjx-mo><mjx-mi class="mjx-i"><mjx-c class="mjx-c1D45B TEX-I"></mjx-c></mjx-mi><mjx-mo class="mjx-n"><mjx-c class="mjx-c21"></mjx-c></mjx-mo></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo>!</mo><mo>+</mo><mn>2</mn><mo>!</mo><mo>+</mo><mo>.</mo><mo>.</mo><mo>.</mo><mo>+</mo><mi>n</mi><mo>!</mo></math></mjx-assistive-mml></mjx-container>).
+</p>
+</div>
+</div>
+<div id="outline-container-org048d4f1" class="outline-3">
+<h3 id="org048d4f1"><span class="section-number-3">1.26.</span> Looping and range (3)</h3>
+<div class="outline-text-3" id="text-1-26">
+<p>
+Using a <code>for</code> loop, create a function that sums up only even numbers up to its parameter.
+</p>
+</div>
+</div>
+<div id="outline-container-org0a6333b" class="outline-3">
+<h3 id="org0a6333b"><span class="section-number-3">1.27.</span> Looping and range (4)</h3>
+<div class="outline-text-3" id="text-1-27">
+<p>
+Display half of a triangle. For an argument of 6 the function showHalfTriangle() should display the following:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin">#
+##
+###
+####
+#####
+######
+</pre>
+</div>
+<p>
+You can rewrite the function to use <code>repeat</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-orgaf41d74" class="outline-3">
+<h3 id="orgaf41d74"><span class="section-number-3">1.28.</span> Looping and range (IntelliJ)</h3>
+<div class="outline-text-3" id="text-1-28">
+<p>
+IntelliJ IDEA rapidly creates frequent-used expressions using <code>Live templates</code>.
+Type <code>iter</code> and then press <code>Tab</code>. This live template expands into a <code>for</code> expression.
+You type the expression you want to iterate over, along with the name for the
+index variable. IntelliJ IDEA automatically suggests the variable name to
+iterate over if it’s available in the context.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-kotlin">iter + tab
+
+<span style="color: #e45649;">for</span> (i <span style="color: #e45649;">in</span> iterable) {
+
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd8d68f0" class="outline-3">
+<h3 id="orgd8d68f0"><span class="section-number-3">1.29.</span> The <code>in</code> keyword (1)</h3>
+<div class="outline-text-3" id="text-1-29">
+<p>
+Create a <code>String</code> by iterating over a range of characters 
+that you define. The resulting String should contain all English letters
+ in alphabetical order: «&nbsp;abc…z&nbsp;».
+</p>
+</div>
+</div>
+<div id="outline-container-org32851e2" class="outline-3">
+<h3 id="org32851e2"><span class="section-number-3">1.30.</span> The <code>in</code> keyword (2)</h3>
+<div class="outline-text-3" id="text-1-30">
+<p>
+Use <code>step</code> to write a function <code>sumOfEven</code> that sums only even numbers up to a given number (the parameter).
+</p>
+</div>
+</div>
+<div id="outline-container-org42cdfd4" class="outline-3">
+<h3 id="org42cdfd4"><span class="section-number-3">1.31.</span> The in keyword (3)</h3>
+<div class="outline-text-3" id="text-1-31">
+<p>
+Write a function <code>isLowerCase</code> that checks whether a character is a lowercase letter.
+</p>
+</div>
+</div>
+<div id="outline-container-orgb12a8d8" class="outline-3">
+<h3 id="orgb12a8d8"><span class="section-number-3">1.32.</span> The in keyword (4)</h3>
+<div class="outline-text-3" id="text-1-32">
+<p>
+Write a function <code>isValidIdentifier</code> that checks whether its <code>String</code> parameter is a
+valid identifier. A valid identifier is a non-empty <code>String</code> that starts with a
+letter or underscore and consists of only letters, digits and underscores.
+</p>
+
+<p>
+Use <code>s.isEmpty()</code> to check whether <code>s</code> is an empty <code>String</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-org0fe8b42" class="outline-3">
+<h3 id="org0fe8b42"><span class="section-number-3">1.33.</span> The in keyword (5)</h3>
+<div class="outline-text-3" id="text-1-33">
+<p>
+The <code>main</code> live template automatically produces the <code>main()</code> function declaration.
+Type <code>main</code>, and then press <code>Tab</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-org20b4971" class="outline-3">
+<h3 id="org20b4971"><span class="section-number-3">1.34.</span> Expressions &amp; Statements (1)</h3>
+<div class="outline-text-3" id="text-1-34">
+<p>
+Display the return value of <code>println(1)</code>. Explain the result!
+</p>
+</div>
+</div>
+<div id="outline-container-orgae7eda3" class="outline-3">
+<h3 id="orgae7eda3"><span class="section-number-3">1.35.</span> Expressions &amp; Statements (2)</h3>
+<div class="outline-text-3" id="text-1-35">
+<p>
+Write three functions using expression body syntax:
+</p>
+<ul class="org-ul">
+<li><code>f()</code> takes two Int parameters and returns the sum.</li>
+<li><code>g()</code> takes two String parameters and returns them, concatenated.</li>
+<li><code>h()</code> calls <code>println()</code> to display <code>"h()"</code></li>
+</ul>
+
+<p>
+In <code>main()</code>, assign the result of each function to a val, and specify the type.
+Then print on the console the value of each val. Explain the result!
+</p>
+</div>
+</div>
+<div id="outline-container-orgdbb5d9f" class="outline-3">
+<h3 id="orgdbb5d9f"><span class="section-number-3">1.36.</span> Expressions &amp; Statements (2)</h3>
+<div class="outline-text-3" id="text-1-36">
+<p>
+Guess what the following code will display and then check yourself using Kotlin:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">var</span> <span style="color: #6a1868;">i</span> = <span style="color: #da8548; font-weight: bold;">1</span>
+println(i-- - --i)
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org04c6c7f" class="outline-2">
+<h2 id="org04c6c7f"><span class="section-number-2">2.</span> Algorithmique en Kotlin</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Dans cette partie du TP nous allons reprendre quelques algorithmes vus en cours
+de Qualité Algorithmique et étudier des variants. Vous utiliserez exclusivement
+des listes (mutables et non mutables). Vous aurez besoin d’explorer les méthodes
+disponibles sur les listes. La complétion automatique de Kotlin vous aidera à
+trouver les méthodes adéquates. Notez qu’en mettant le curseur sur une méthode,
+une fenêtre pop-up donnera la documention de la méthode. Vous aurez en
+particulier besoin des méthodes permettant de récupérer les premier et dernier
+éléments d’une liste, ainsi que d’extraire une liste contenant les <mjx-container class="MathJax CtxtMenu_Attached_0" jax="CHTML" style="font-size: 121.1%; position: relative;" tabindex="0" ctxtmenu_counter="2"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mi class="mjx-i"><mjx-c class="mjx-c1D45B TEX-I"></mjx-c></mjx-mi></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi></math></mjx-assistive-mml></mjx-container> permiers
+ou <mjx-container class="MathJax CtxtMenu_Attached_0" jax="CHTML" style="font-size: 121.1%; position: relative;" tabindex="0" ctxtmenu_counter="3"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mi class="mjx-i"><mjx-c class="mjx-c1D45B TEX-I"></mjx-c></mjx-mi></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi></math></mjx-assistive-mml></mjx-container> derniers éléments.
+</p>
+</div>
+<div id="outline-container-orgecf7c18" class="outline-3">
+<h3 id="orgecf7c18"><span class="section-number-3">2.1.</span> Recherche linéaire</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="outline-container-orgc44e37e" class="outline-4">
+<h4 id="orgc44e37e">Version itérative</h4>
+<div class="outline-text-4" id="text-orgc44e37e">
+<p>
+Implantez en Kotlin, <b>de façon itérative</b>, la recherche linéaire d’un élément
+<code>e</code> dans une liste <code>liste</code> qui renvoie l’indice de <code>e</code> dans <code>liste</code>, si <code>e</code> est
+présent, et -1 sinon:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">fun</span> <span style="color: #a626a4;">recherche</span>_lineaire_iterative(e:<span style="color: #986801;">Int</span>, liste:<span style="color: #986801;">List&lt;Int&gt;</span>) : <span style="color: #986801;">Int</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb551ce2" class="outline-4">
+<h4 id="orgb551ce2">Version récursive</h4>
+<div class="outline-text-4" id="text-orgb551ce2">
+<p>
+Même question mais cette fois en version récursive à l’aide de la clause <code>when</code>.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org46db669" class="outline-3">
+<h3 id="org46db669"><span class="section-number-3">2.2.</span> Recherche dichotomique</h3>
+<div class="outline-text-3" id="text-2-2">
+</div>
+<div id="outline-container-org094e945" class="outline-4">
+<h4 id="org094e945">Version itérative</h4>
+<div class="outline-text-4" id="text-org094e945">
+<p>
+Implémentez la version itérative de la recherche dichotomique:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">fun</span> <span style="color: #a626a4;">recherche</span>_dicho_iterative(e: <span style="color: #986801;">Int</span>, liste:<span style="color: #986801;">List&lt;Int&gt;</span>) : <span style="color: #986801;">Int</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org8847486" class="outline-4">
+<h4 id="org8847486">Version récursive avec indices</h4>
+<div class="outline-text-4" id="text-org8847486">
+<p>
+Implémentez la version récursive de la recherche dichotomique avec indices:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">fun</span> <span style="color: #a626a4;">recherche</span>_dicho_rec(e : <span style="color: #986801;">Int</span>, liste : <span style="color: #986801;">List&lt;Int&gt;</span>, bas : <span style="color: #986801;">Int</span>, haut : <span style="color: #986801;">Int</span>) : <span style="color: #986801;">Int</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org48ea480" class="outline-4">
+<h4 id="org48ea480">Version récursive sans indices</h4>
+<div class="outline-text-4" id="text-org48ea480">
+<p>
+Réimplémentez la version récursive mais cette fois sans indices:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">fun</span> <span style="color: #a626a4;">recherche</span>_dicho_rec(e : <span style="color: #986801;">Int</span>, liste : <span style="color: #986801;">List&lt;Int&gt;</span>) : <span style="color: #986801;">Int</span>
+</pre>
+</div>
+<p>
+Il s’agira cette fois de rappeler la fonction sur chacune des deux moitiés de
+liste (il ne s’agit évidemment pas de simplement faire appel la fonction
+précédemment implémentée!)
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf48a509" class="outline-3">
+<h3 id="orgf48a509"><span class="section-number-3">2.3.</span> Tri par insertion</h3>
+<div class="outline-text-3" id="text-2-3">
+</div>
+<div id="outline-container-orgc08ba8f" class="outline-4">
+<h4 id="orgc08ba8f">Version mutable</h4>
+<div class="outline-text-4" id="text-orgc08ba8f">
+<p>
+Implémentez le tri par insertion à l’aide de listes mutables:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">fun</span> <span style="color: #a626a4;">tri</span>_insertion_mutable(liste : <span style="color: #986801;">List&lt;Int&gt;</span>) : <span style="color: #986801;">List&lt;Int&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9194a45" class="outline-4">
+<h4 id="org9194a45">Version non mutable</h4>
+<div class="outline-text-4" id="text-org9194a45">
+<p>
+Implémentez le tri par insertion en utilisant uniquement des listes non mutables!
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #e45649;">fun</span> <span style="color: #a626a4;">tri</span>_insertion_non_mutable(liste : <span style="color: #986801;">List&lt;Int&gt;</span>) : <span style="color: #986801;">List&lt;Int&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Auteur: Cédric Lhoussaine</p>
+</div>
+
+
+<protonpass-root-341b data-protonpass-role="root" data-protonpass-theme="os"></protonpass-root-341b></body></html>
