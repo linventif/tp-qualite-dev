@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Généricité et typage avancé</title>
+<meta name="author" content="Cédric Lhoussaine">
+<meta name="generator" content="Org Mode">
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="G%C3%A9n%C3%A9ricit%C3%A9%20et%20typage%20avanc%C3%A9_files/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script id="MathJax-script" async="" src="G%C3%A9n%C3%A9ricit%C3%A9%20et%20typage%20avanc%C3%A9_files/tex-mml-chtml.js">
+</script>
+<style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style><style type="text/css">.CtxtMenu_InfoClose {  top:.2em; right:.2em;}
+.CtxtMenu_InfoContent {  overflow:auto; text-align:left; font-size:80%;  padding:.4em .6em; border:1px inset; margin:1em 0px;  max-height:20em; max-width:30em; background-color:#EEEEEE;  white-space:normal;}
+.CtxtMenu_Info.CtxtMenu_MousePost {outline:none;}
+.CtxtMenu_Info {  position:fixed; left:50%; width:auto; text-align:center;  border:3px outset; padding:1em 2em; background-color:#DDDDDD;  color:black;  cursor:default; font-family:message-box; font-size:120%;  font-style:normal; text-indent:0; text-transform:none;  line-height:normal; letter-spacing:normal; word-spacing:normal;  word-wrap:normal; white-space:nowrap; float:none; z-index:201;  border-radius: 15px;                     /* Opera 10.5 and IE9 */  -webkit-border-radius:15px;               /* Safari and Chrome */  -moz-border-radius:15px;                  /* Firefox */  -khtml-border-radius:15px;                /* Konqueror */  box-shadow:0px 10px 20px #808080;         /* Opera 10.5 and IE9 */  -webkit-box-shadow:0px 10px 20px #808080; /* Safari 3 & Chrome */  -moz-box-shadow:0px 10px 20px #808080;    /* Forefox 3.5 */  -khtml-box-shadow:0px 10px 20px #808080;  /* Konqueror */  filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color="gray", Positive="true"); /* IE */}
+</style><style type="text/css">.CtxtMenu_MenuClose {  position:absolute;  cursor:pointer;  display:inline-block;  border:2px solid #AAA;  border-radius:18px;  -webkit-border-radius: 18px;             /* Safari and Chrome */  -moz-border-radius: 18px;                /* Firefox */  -khtml-border-radius: 18px;              /* Konqueror */  font-family: "Courier New", Courier;  font-size:24px;  color:#F0F0F0}
+.CtxtMenu_MenuClose span {  display:block; background-color:#AAA; border:1.5px solid;  border-radius:18px;  -webkit-border-radius: 18px;             /* Safari and Chrome */  -moz-border-radius: 18px;                /* Firefox */  -khtml-border-radius: 18px;              /* Konqueror */  line-height:0;  padding:8px 0 6px     /* may need to be browser-specific */}
+.CtxtMenu_MenuClose:hover {  color:white!important;  border:2px solid #CCC!important}
+.CtxtMenu_MenuClose:hover span {  background-color:#CCC!important}
+.CtxtMenu_MenuClose:hover:focus {  outline:none}
+</style><style type="text/css">.CtxtMenu_Menu {  position:absolute;  background-color:white;  color:black;  width:auto; padding:5px 0px;  border:1px solid #CCCCCC; margin:0; cursor:default;  font: menu; text-align:left; text-indent:0; text-transform:none;  line-height:normal; letter-spacing:normal; word-spacing:normal;  word-wrap:normal; white-space:nowrap; float:none; z-index:201;  border-radius: 5px;                     /* Opera 10.5 and IE9 */  -webkit-border-radius: 5px;             /* Safari and Chrome */  -moz-border-radius: 5px;                /* Firefox */  -khtml-border-radius: 5px;              /* Konqueror */  box-shadow:0px 10px 20px #808080;         /* Opera 10.5 and IE9 */  -webkit-box-shadow:0px 10px 20px #808080; /* Safari 3 & Chrome */  -moz-box-shadow:0px 10px 20px #808080;    /* Forefox 3.5 */  -khtml-box-shadow:0px 10px 20px #808080;  /* Konqueror */}
+.CtxtMenu_MenuItem {  padding: 1px 2em;  background:transparent;}
+.CtxtMenu_MenuArrow {  position:absolute; right:.5em; padding-top:.25em; color:#666666;  font-family: null; font-size: .75em}
+.CtxtMenu_MenuActive .CtxtMenu_MenuArrow {color:white}
+.CtxtMenu_MenuArrow.CtxtMenu_RTL {left:.5em; right:auto}
+.CtxtMenu_MenuCheck {  position:absolute; left:.7em;  font-family: null}
+.CtxtMenu_MenuCheck.CtxtMenu_RTL { right:.7em; left:auto }
+.CtxtMenu_MenuRadioCheck {  position:absolute; left: .7em;}
+.CtxtMenu_MenuRadioCheck.CtxtMenu_RTL {  right: .7em; left:auto}
+.CtxtMenu_MenuInputBox {  padding-left: 1em; right:.5em; color:#666666;  font-family: null;}
+.CtxtMenu_MenuInputBox.CtxtMenu_RTL {  left: .1em;}
+.CtxtMenu_MenuComboBox {  left:.1em; padding-bottom:.5em;}
+.CtxtMenu_MenuSlider {  left: .1em;}
+.CtxtMenu_SliderValue {  position:absolute; right:.1em; padding-top:.25em; color:#333333;  font-size: .75em}
+.CtxtMenu_SliderBar {  outline: none; background: #d3d3d3}
+.CtxtMenu_MenuLabel {  padding: 1px 2em 3px 1.33em;  font-style:italic}
+.CtxtMenu_MenuRule {  border-top: 1px solid #DDDDDD;  margin: 4px 3px;}
+.CtxtMenu_MenuDisabled {  color:GrayText}
+.CtxtMenu_MenuActive {  background-color: #606872;  color: white;}
+.CtxtMenu_MenuDisabled:focus {  background-color: #E8E8E8}
+.CtxtMenu_MenuLabel:focus {  background-color: #E8E8E8}
+.CtxtMenu_ContextMenu:focus {  outline:none}
+.CtxtMenu_ContextMenu .CtxtMenu_MenuItem:focus {  outline:none}
+.CtxtMenu_SelectionMenu {  position:relative; float:left;  border-bottom: none; -webkit-box-shadow:none; -webkit-border-radius:0px; }
+.CtxtMenu_SelectionItem {  padding-right: 1em;}
+.CtxtMenu_Selection {  right: 40%; width:50%; }
+.CtxtMenu_SelectionBox {  padding: 0em; max-height:20em; max-width: none;  background-color:#FFFFFF;}
+.CtxtMenu_SelectionDivider {  clear: both; border-top: 2px solid #000000;}
+.CtxtMenu_Menu .CtxtMenu_MenuClose {  top:-10px; left:-10px}
+</style><style id="MJX-CHTML-styles">
+mjx-container[jax="CHTML"] {
+  line-height: 0;
+}
+
+mjx-container [space="1"] {
+  margin-left: .111em;
+}
+
+mjx-container [space="2"] {
+  margin-left: .167em;
+}
+
+mjx-container [space="3"] {
+  margin-left: .222em;
+}
+
+mjx-container [space="4"] {
+  margin-left: .278em;
+}
+
+mjx-container [space="5"] {
+  margin-left: .333em;
+}
+
+mjx-container [rspace="1"] {
+  margin-right: .111em;
+}
+
+mjx-container [rspace="2"] {
+  margin-right: .167em;
+}
+
+mjx-container [rspace="3"] {
+  margin-right: .222em;
+}
+
+mjx-container [rspace="4"] {
+  margin-right: .278em;
+}
+
+mjx-container [rspace="5"] {
+  margin-right: .333em;
+}
+
+mjx-container [size="s"] {
+  font-size: 70.7%;
+}
+
+mjx-container [size="ss"] {
+  font-size: 50%;
+}
+
+mjx-container [size="Tn"] {
+  font-size: 60%;
+}
+
+mjx-container [size="sm"] {
+  font-size: 85%;
+}
+
+mjx-container [size="lg"] {
+  font-size: 120%;
+}
+
+mjx-container [size="Lg"] {
+  font-size: 144%;
+}
+
+mjx-container [size="LG"] {
+  font-size: 173%;
+}
+
+mjx-container [size="hg"] {
+  font-size: 207%;
+}
+
+mjx-container [size="HG"] {
+  font-size: 249%;
+}
+
+mjx-container [width="full"] {
+  width: 100%;
+}
+
+mjx-box {
+  display: inline-block;
+}
+
+mjx-block {
+  display: block;
+}
+
+mjx-itable {
+  display: inline-table;
+}
+
+mjx-row {
+  display: table-row;
+}
+
+mjx-row > * {
+  display: table-cell;
+}
+
+mjx-mtext {
+  display: inline-block;
+}
+
+mjx-mstyle {
+  display: inline-block;
+}
+
+mjx-merror {
+  display: inline-block;
+  color: red;
+  background-color: yellow;
+}
+
+mjx-mphantom {
+  visibility: hidden;
+}
+
+_::-webkit-full-page-media, _:future, :root mjx-container {
+  will-change: opacity;
+}
+
+mjx-assistive-mml {
+  position: absolute !important;
+  top: 0px;
+  left: 0px;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 1px 0px 0px 0px !important;
+  border: 0px !important;
+  display: block !important;
+  width: auto !important;
+  overflow: hidden !important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+mjx-assistive-mml[display="block"] {
+  width: 100% !important;
+}
+
+mjx-math {
+  display: inline-block;
+  text-align: left;
+  line-height: 0;
+  text-indent: 0;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 100%;
+  font-size-adjust: none;
+  letter-spacing: normal;
+  border-collapse: collapse;
+  word-wrap: normal;
+  word-spacing: normal;
+  white-space: nowrap;
+  direction: ltr;
+  padding: 1px 0;
+}
+
+mjx-container[jax="CHTML"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="CHTML"][display="true"][width="full"] {
+  display: flex;
+}
+
+mjx-container[jax="CHTML"][display="true"] mjx-math {
+  padding: 0;
+}
+
+mjx-container[jax="CHTML"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="CHTML"][justify="right"] {
+  text-align: right;
+}
+
+mjx-mfrac {
+  display: inline-block;
+  text-align: left;
+}
+
+mjx-frac {
+  display: inline-block;
+  vertical-align: 0.17em;
+  padding: 0 .22em;
+}
+
+mjx-frac[type="d"] {
+  vertical-align: .04em;
+}
+
+mjx-frac[delims] {
+  padding: 0 .1em;
+}
+
+mjx-frac[atop] {
+  padding: 0 .12em;
+}
+
+mjx-frac[atop][delims] {
+  padding: 0;
+}
+
+mjx-dtable {
+  display: inline-table;
+  width: 100%;
+}
+
+mjx-dtable > * {
+  font-size: 2000%;
+}
+
+mjx-dbox {
+  display: block;
+  font-size: 5%;
+}
+
+mjx-num {
+  display: block;
+  text-align: center;
+}
+
+mjx-den {
+  display: block;
+  text-align: center;
+}
+
+mjx-mfrac[bevelled] > mjx-num {
+  display: inline-block;
+}
+
+mjx-mfrac[bevelled] > mjx-den {
+  display: inline-block;
+}
+
+mjx-den[align="right"], mjx-num[align="right"] {
+  text-align: right;
+}
+
+mjx-den[align="left"], mjx-num[align="left"] {
+  text-align: left;
+}
+
+mjx-nstrut {
+  display: inline-block;
+  height: .054em;
+  width: 0;
+  vertical-align: -.054em;
+}
+
+mjx-nstrut[type="d"] {
+  height: .217em;
+  vertical-align: -.217em;
+}
+
+mjx-dstrut {
+  display: inline-block;
+  height: .505em;
+  width: 0;
+}
+
+mjx-dstrut[type="d"] {
+  height: .726em;
+}
+
+mjx-line {
+  display: block;
+  box-sizing: border-box;
+  min-height: 1px;
+  height: .06em;
+  border-top: .06em solid;
+  margin: .06em -.1em;
+  overflow: hidden;
+}
+
+mjx-line[type="d"] {
+  margin: .18em -.1em;
+}
+
+mjx-mi {
+  display: inline-block;
+  text-align: left;
+}
+
+mjx-c {
+  display: inline-block;
+}
+
+mjx-utext {
+  display: inline-block;
+  padding: .75em 0 .2em 0;
+}
+
+mjx-c::before {
+  display: block;
+  width: 0;
+}
+
+.MJX-TEX {
+  font-family: MJXZERO, MJXTEX;
+}
+
+.TEX-B {
+  font-family: MJXZERO, MJXTEX-B;
+}
+
+.TEX-I {
+  font-family: MJXZERO, MJXTEX-I;
+}
+
+.TEX-MI {
+  font-family: MJXZERO, MJXTEX-MI;
+}
+
+.TEX-BI {
+  font-family: MJXZERO, MJXTEX-BI;
+}
+
+.TEX-S1 {
+  font-family: MJXZERO, MJXTEX-S1;
+}
+
+.TEX-S2 {
+  font-family: MJXZERO, MJXTEX-S2;
+}
+
+.TEX-S3 {
+  font-family: MJXZERO, MJXTEX-S3;
+}
+
+.TEX-S4 {
+  font-family: MJXZERO, MJXTEX-S4;
+}
+
+.TEX-A {
+  font-family: MJXZERO, MJXTEX-A;
+}
+
+.TEX-C {
+  font-family: MJXZERO, MJXTEX-C;
+}
+
+.TEX-CB {
+  font-family: MJXZERO, MJXTEX-CB;
+}
+
+.TEX-FR {
+  font-family: MJXZERO, MJXTEX-FR;
+}
+
+.TEX-FRB {
+  font-family: MJXZERO, MJXTEX-FRB;
+}
+
+.TEX-SS {
+  font-family: MJXZERO, MJXTEX-SS;
+}
+
+.TEX-SSB {
+  font-family: MJXZERO, MJXTEX-SSB;
+}
+
+.TEX-SSI {
+  font-family: MJXZERO, MJXTEX-SSI;
+}
+
+.TEX-SC {
+  font-family: MJXZERO, MJXTEX-SC;
+}
+
+.TEX-T {
+  font-family: MJXZERO, MJXTEX-T;
+}
+
+.TEX-V {
+  font-family: MJXZERO, MJXTEX-V;
+}
+
+.TEX-VB {
+  font-family: MJXZERO, MJXTEX-VB;
+}
+
+mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
+  font-family: MJXZERO, MJXTEX-S1, MJXTEX-S4, MJXTEX, MJXTEX-A ! important;
+}
+
+@font-face /* 0 */ {
+  font-family: MJXZERO;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff") format("woff");
+}
+
+@font-face /* 1 */ {
+  font-family: MJXTEX;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff") format("woff");
+}
+
+@font-face /* 2 */ {
+  font-family: MJXTEX-B;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Bold.woff") format("woff");
+}
+
+@font-face /* 3 */ {
+  font-family: MJXTEX-I;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff") format("woff");
+}
+
+@font-face /* 4 */ {
+  font-family: MJXTEX-MI;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Italic.woff") format("woff");
+}
+
+@font-face /* 5 */ {
+  font-family: MJXTEX-BI;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-BoldItalic.woff") format("woff");
+}
+
+@font-face /* 6 */ {
+  font-family: MJXTEX-S1;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff") format("woff");
+}
+
+@font-face /* 7 */ {
+  font-family: MJXTEX-S2;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff") format("woff");
+}
+
+@font-face /* 8 */ {
+  font-family: MJXTEX-S3;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff") format("woff");
+}
+
+@font-face /* 9 */ {
+  font-family: MJXTEX-S4;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff") format("woff");
+}
+
+@font-face /* 10 */ {
+  font-family: MJXTEX-A;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff") format("woff");
+}
+
+@font-face /* 11 */ {
+  font-family: MJXTEX-C;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Regular.woff") format("woff");
+}
+
+@font-face /* 12 */ {
+  font-family: MJXTEX-CB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Bold.woff") format("woff");
+}
+
+@font-face /* 13 */ {
+  font-family: MJXTEX-FR;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Fraktur-Regular.woff") format("woff");
+}
+
+@font-face /* 14 */ {
+  font-family: MJXTEX-FRB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Fraktur-Bold.woff") format("woff");
+}
+
+@font-face /* 15 */ {
+  font-family: MJXTEX-SS;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_SansSerif-Regular.woff") format("woff");
+}
+
+@font-face /* 16 */ {
+  font-family: MJXTEX-SSB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_SansSerif-Bold.woff") format("woff");
+}
+
+@font-face /* 17 */ {
+  font-family: MJXTEX-SSI;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_SansSerif-Italic.woff") format("woff");
+}
+
+@font-face /* 18 */ {
+  font-family: MJXTEX-SC;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Script-Regular.woff") format("woff");
+}
+
+@font-face /* 19 */ {
+  font-family: MJXTEX-T;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Typewriter-Regular.woff") format("woff");
+}
+
+@font-face /* 20 */ {
+  font-family: MJXTEX-V;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Vector-Regular.woff") format("woff");
+}
+
+@font-face /* 21 */ {
+  font-family: MJXTEX-VB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Vector-Bold.woff") format("woff");
+}
+
+mjx-c.mjx-c1D45D.TEX-I::before {
+  padding: 0.442em 0.503em 0.194em 0;
+  content: "p";
+}
+
+mjx-c.mjx-c1D45E.TEX-I::before {
+  padding: 0.442em 0.46em 0.194em 0;
+  content: "q";
+}
+</style></head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Généricité et typage avancé
+<br>
+<span class="subtitle">BUT Informatique - S5 - Qualité de développement</span>
+</h1>
+<div id="outline-container-org74e8ffd" class="outline-2">
+<h2 id="org74e8ffd"><span class="section-number-2">1.</span> Préliminaires</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Une pile est une structure de données dont les caractéristiques sont les suivantes:
+</p>
+<ul class="org-ul">
+<li>tous les éléments sont de même type;</li>
+<li>le nombre d’éléments peut être éventuellement limité;</li>
+<li>le seul <b>élément accessible est celui du sommet</b> de la pile: on peut le lire,
+l’enlever, ou poser un nouvel élément au sommet.</li>
+</ul>
+<p>
+Dans ce TP, nous chercherons à réaliser une pile qui puisse stocker
+indifféremment des chaînes de caractères, des entiers, et des nombres
+rationnels. Nous utiliserons donc un <i>type générique</i>. On donne ci-dessous
+l’interface <code>Pile</code> qui devra être implémentée par toute classe censée
+représenter une pile:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #e45649;">public</span> <span style="color: #e45649;">interface</span> <span style="color: #986801;">Pile</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">E</span><span style="color: #4078f2;">&gt;</span> <span style="color: #4078f2;">{</span>
+    <span style="color: #986801;">int</span> <span style="color: #6a1868;">MAX_ELEMENTS</span> = <span style="color: #da8548; font-weight: bold;">100</span> ;    <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">nombre maximal d’éléments</span>
+    <span style="color: #986801;">boolean</span> <span style="color: #a626a4;">vide</span><span style="color: #a626a4;">()</span> ;            <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">teste si la pile est vide</span>
+    <span style="color: #986801;">boolean</span> <span style="color: #a626a4;">pleine</span><span style="color: #a626a4;">()</span> ;          <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">teste si la pile est pleine</span>
+    <span style="color: #986801;">boolean</span> <span style="color: #a626a4;">peutEmpiler</span><span style="color: #a626a4;">(</span><span style="color: #986801;">E</span> <span style="color: #6a1868;">x</span><span style="color: #a626a4;">)</span> ;  <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">teste si la pile peut empiler x</span>
+    <span style="color: #986801;">E</span> <span style="color: #a626a4;">sommet</span><span style="color: #a626a4;">()</span> ;                <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">référence de l’objet au sommet</span>
+    <span style="color: #986801;">E</span> <span style="color: #a626a4;">depile</span><span style="color: #a626a4;">()</span> ;                <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">enlève et retourne l’objet au sommet</span>
+    <span style="color: #986801;">void</span> <span style="color: #a626a4;">empile</span><span style="color: #a626a4;">(</span><span style="color: #986801;">E</span> <span style="color: #6a1868;">x</span><span style="color: #a626a4;">)</span> ;          <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">place un objet au sommet</span>
+    <span style="color: #986801;">void</span> <span style="color: #a626a4;">vider</span><span style="color: #a626a4;">()</span> ;              <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">vide la pile</span>
+    <span style="color: #986801;">int</span> <span style="color: #a626a4;">nbElements</span><span style="color: #a626a4;">()</span> ;          <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">compte le nombre d’éléments empilés</span>
+    <span style="color: #986801;">void</span> <span style="color: #a626a4;">deplacerUnElementVers</span><span style="color: #a626a4;">(</span><span style="color: #986801;">Pile</span><span style="color: #50a14f;">&lt;</span><span style="color: #986801;">E</span><span style="color: #50a14f;">&gt;</span> <span style="color: #6a1868;">p</span><span style="color: #a626a4;">)</span> ;<span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">déplace un élément de la pile courante vers p</span>
+    <span style="color: #986801;">String</span> <span style="color: #a626a4;">toString</span><span style="color: #a626a4;">()</span> ;         <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">affichage de tous les éléments depuis le sommet</span>
+<span style="color: #4078f2;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org432eb4b" class="outline-2">
+<h2 id="org432eb4b"><span class="section-number-2">2.</span> Une première implantation de l’interface <code>Pile&lt;E&gt;</code></h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgc524d2d" class="outline-3">
+<h3 id="orgc524d2d"><span class="section-number-3">2.1.</span> <code>PileTableau&lt;E&gt;</code></h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Écrivez une classe <code>PileTableau&lt;E&gt;</code> qui implémente l’interface <code>Pile&lt;E&gt;</code>
+au moyen des attributs suivants:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #e45649;">private</span> <span style="color: #986801;">E</span> <span style="color: #4078f2;">[]</span> <span style="color: #6a1868;">elements</span> ;  <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">les éléments contenus dans la pile</span>
+<span style="color: #e45649;">private</span> <span style="color: #986801;">int</span> <span style="color: #6a1868;">nbElem</span> = <span style="color: #da8548; font-weight: bold;">0</span> ; <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">le nombre d’éléments dans la pile</span>
+<span style="color: #e45649;">private</span> <span style="color: #986801;">String</span> <span style="color: #6a1868;">nom</span> ;     <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">nom de la pile : information supplémentaire propre à PileTableau</span>
+</pre>
+</div>
+<p>
+N’oubliez pas que pour compiler <code>PileTableau.java</code>, vous devrez avoir écrit
+<b>toutes les méthodes</b> de l’interface <code>Pile</code>: pour pouvoir les tester une par
+une, le plus simple est donc d’écrire dans un premier temps des méthodes « vides
+» (qui ne font rien et lève l’exception <code>UnsupportedOperationException</code>), puis de compléter
+chaque méthode successivement. <b>Veillez impérativement à éliminer tous les
+avertissements de compilation.</b>
+</p>
+<blockquote>
+<p>
+<b>Remarque sur les tableaux de types génériques:</b> Attention ! Comme vu en
+cours, en java on ne peut instancier un type générique, c’est-à-dire il
+est interdit d’écrire : <code>elements = new E[MAX_ELEMENTS]</code>! En pratique, il
+vaut mieux utiliser une classe générique telle que <code>ArrayList</code> mais ici
+on instanciera un tableau d’<code>Object</code> transtypé comme suit : <code>elements</code>
+(E[]) new Object[MAX<sub>ELEMENTS</sub>]=. Cette méthode génère un avertissement à
+la compilation que l’on pourra désactiver à l’aide de l’annotation
+<code>@SuppressWarnings("unchecked")</code>. <b>Il s’agit du seul avertissement que
+vous êtes autorisés à éliminer avec cette annotation</b>.
+</p>
+</blockquote>
+</div>
+<div id="outline-container-org1e9effe" class="outline-4">
+<h4 id="org1e9effe">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org1e9effe">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #e45649;">public</span> <span style="color: #e45649;">class</span> <span style="color: #986801;">PileTableau</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">E</span><span style="color: #4078f2;">&gt;</span> <span style="color: #e45649;">implements</span> <span style="color: #986801;">Pile</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">E</span><span style="color: #4078f2;">&gt;</span> <span style="color: #4078f2;">{</span>
+    <span style="color: #e45649;">protected</span> <span style="color: #986801;">E</span> <span style="color: #a626a4;">[]</span> <span style="color: #6a1868;">elements</span> ;  <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">les éléments contenus dans la pile</span>
+    <span style="color: #e45649;">protected</span> <span style="color: #986801;">int</span> <span style="color: #6a1868;">nbElem</span> = <span style="color: #da8548; font-weight: bold;">0</span> ; <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">le nombre d’éléments dans la pile</span>
+    <span style="color: #e45649;">protected</span> <span style="color: #986801;">String</span> <span style="color: #6a1868;">nom</span> ;     <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">nom de la pile : information supplémentaire propre à PileTableau</span>
+
+    <span style="color: #84888b; font-style: italic;">/** Constructeur qui crée une pile vide et lui donne un nom */</span>
+    <span style="color: #b751b6;">@SuppressWarnings</span><span style="color: #a626a4;">(</span><span style="color: #50a14f;">"unchecked"</span><span style="color: #a626a4;">)</span>
+    <span style="color: #e45649;">public</span> PileTableau<span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+        elements = <span style="color: #50a14f;">(</span><span style="color: #986801;">E</span><span style="color: #b751b6;">[]</span><span style="color: #50a14f;">)</span> <span style="color: #e45649;">new</span> <span style="color: #986801;">Object</span><span style="color: #50a14f;">[</span>MAX_ELEMENTS<span style="color: #50a14f;">]</span> ;
+        <span style="color: #e45649;">this</span>.nom = <span style="color: #50a14f;">"la pile"</span>;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** Constructeur qui crée une pile vide et lui donne un nom */</span>
+    <span style="color: #b751b6;">@SuppressWarnings</span><span style="color: #a626a4;">(</span><span style="color: #50a14f;">"unchecked"</span><span style="color: #a626a4;">)</span>
+    <span style="color: #e45649;">public</span> PileTableau<span style="color: #a626a4;">(</span>String nom<span style="color: #a626a4;">)</span> <span style="color: #a626a4;">{</span>
+        elements = <span style="color: #50a14f;">(</span><span style="color: #986801;">E</span><span style="color: #b751b6;">[]</span><span style="color: #50a14f;">)</span> <span style="color: #e45649;">new</span> <span style="color: #986801;">Object</span><span style="color: #50a14f;">[</span>MAX_ELEMENTS<span style="color: #50a14f;">]</span> ;
+        <span style="color: #e45649;">this</span>.nom = nom ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #9ca0a4;">/* </span><span style="color: #9ca0a4;">IMPLEMENTATION DE L'INTERFACE PILE</span><span style="color: #9ca0a4;"> */</span>
+
+    <span style="color: #84888b; font-style: italic;">/** teste si la pile est vide */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">boolean</span> <span style="color: #a626a4;">vide</span><span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">return</span> <span style="color: #50a14f;">(</span>nbElem == <span style="color: #da8548; font-weight: bold;">0</span><span style="color: #50a14f;">)</span> ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** teste si la pile est pleine */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">boolean</span> <span style="color: #a626a4;">pleine</span> <span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">return</span> <span style="color: #50a14f;">(</span>nbElem == MAX_ELEMENTS<span style="color: #50a14f;">)</span> ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** teste si la pile peut empiler x */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">boolean</span> <span style="color: #a626a4;">peutEmpiler</span> <span style="color: #a626a4;">(</span><span style="color: #986801;">E</span> <span style="color: #6a1868;">x</span><span style="color: #a626a4;">)</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">return</span> <span style="color: #50a14f;">(</span><span style="color: #4078f2; font-weight: bold;">!</span>pleine<span style="color: #b751b6;">()</span><span style="color: #50a14f;">)</span> ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** renvoie la valeur de l'objet sur le sommet de la pile */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">E</span> <span style="color: #a626a4;">sommet</span><span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">if</span> <span style="color: #50a14f;">(</span>vide<span style="color: #b751b6;">()</span><span style="color: #50a14f;">)</span> <span style="color: #e45649;">return</span> <span style="color: #b751b6;">null</span> ;
+        <span style="color: #e45649;">else</span> <span style="color: #e45649;">return</span> elements<span style="color: #50a14f;">[</span>nbElem-<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #50a14f;">]</span> ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** renvoie la valeur de l'objet sur le sommet de la pile</span>
+<span style="color: #84888b; font-style: italic;">     * et l'enlève */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">E</span> <span style="color: #a626a4;">depile</span><span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">if</span> <span style="color: #50a14f;">(</span>vide<span style="color: #b751b6;">()</span><span style="color: #50a14f;">)</span> <span style="color: #e45649;">return</span> <span style="color: #b751b6;">null</span> ;
+        nbElem-- ;
+        <span style="color: #e45649;">return</span> elements<span style="color: #50a14f;">[</span>nbElem<span style="color: #50a14f;">]</span> ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** ajoute un objet sur le sommet de la pile */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">empile</span><span style="color: #a626a4;">(</span><span style="color: #986801;">E</span> <span style="color: #6a1868;">o</span><span style="color: #a626a4;">){</span>
+        <span style="color: #e45649;">if</span> <span style="color: #50a14f;">(</span>peutEmpiler<span style="color: #b751b6;">(</span>o<span style="color: #b751b6;">)</span><span style="color: #50a14f;">)</span> <span style="color: #50a14f;">{</span>
+            elements<span style="color: #b751b6;">[</span>nbElem<span style="color: #b751b6;">]</span> = o ;
+            nbElem++ ;
+        <span style="color: #50a14f;">}</span>
+        <span style="color: #e45649;">else</span> System.out.println<span style="color: #50a14f;">(</span><span style="color: #50a14f;">"empilation impossible"</span><span style="color: #50a14f;">)</span>;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** vide la pile */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">vider</span><span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+        nbElem = <span style="color: #da8548; font-weight: bold;">0</span> ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** compte le nombre d'éléments présents dans la pile */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">int</span> <span style="color: #a626a4;">nbElements</span><span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">return</span> nbElem ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">deplacerUnElementVers</span><span style="color: #a626a4;">(</span><span style="color: #986801;">Pile</span><span style="color: #50a14f;">&lt;</span><span style="color: #986801;">E</span><span style="color: #50a14f;">&gt;</span> <span style="color: #6a1868;">p</span><span style="color: #a626a4;">)</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">if</span> <span style="color: #50a14f;">(</span><span style="color: #4078f2; font-weight: bold;">!</span>vide<span style="color: #b751b6;">()</span> &amp;&amp; p.peutEmpiler<span style="color: #b751b6;">(</span>sommet<span style="color: #4078f2;">()</span><span style="color: #b751b6;">)</span><span style="color: #50a14f;">)</span> <span style="color: #50a14f;">{</span>
+            p.empile<span style="color: #b751b6;">(</span><span style="color: #e45649;">this</span>.depile<span style="color: #4078f2;">()</span><span style="color: #b751b6;">)</span> ;
+            <span style="color: #e45649;">if</span> <span style="color: #b751b6;">(</span>p <span style="color: #e45649;">instanceof</span> PileTableau<span style="color: #b751b6;">)</span>
+                System.out.println<span style="color: #b751b6;">(</span><span style="color: #50a14f;">"Déplacement de "</span> + nom + <span style="color: #50a14f;">" vers "</span>
+                        + <span style="color: #4078f2;">(</span><span style="color: #a626a4;">(</span><span style="color: #986801;">PileTableau</span><span style="color: #50a14f;">&lt;</span><span style="color: #986801;">E</span><span style="color: #50a14f;">&gt;</span><span style="color: #a626a4;">)</span> p<span style="color: #4078f2;">)</span>.nom<span style="color: #4078f2;">()</span><span style="color: #b751b6;">)</span>;
+        <span style="color: #50a14f;">}</span>
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** affichage (sommet = premier) */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">String</span> <span style="color: #a626a4;">toString</span><span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org23b313e" class="outline-3">
+<h3 id="org23b313e"><span class="section-number-3">2.2.</span> Tests</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Testez la classe <code>PileTableau</code>, en créant des instances dans lesquelles vous
+placerez respectivement des entiers et des chaînes de caractères.
+</p>
+</div>
+</div>
+<div id="outline-container-org8ccea98" class="outline-3">
+<h3 id="org8ccea98"><span class="section-number-3">2.3.</span> Affichage du nom</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+On veut maintenant que la méthode <code>deplacerUnElementVers</code> affiche le nom de la
+pile de départ et le nom de la pile d’arrivée. Quels problèmes se posent ?
+Comment procéder ?
+</p>
+</div>
+<div id="outline-container-orgec529ec" class="outline-4">
+<h4 id="orgec529ec">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-orgec529ec">
+<p>
+Le problème est que l’attribut <code>nom</code> est privé et qu’aucune méthode de l’interface <code>Pile</code> ne permet d’y accéder. Il faut donc créer une méthode d’instance <code>nom()</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-java">    <span style="color: #e45649;">public</span> <span style="color: #986801;">String</span> <span style="color: #a626a4;">nom</span><span style="color: #4078f2;">()</span> <span style="color: #4078f2;">{</span> <span style="color: #e45649;">return</span> nom ; <span style="color: #4078f2;">}</span>
+</pre>
+</div>
+<p>
+et transtyper le paramètre <code>p</code> de <code>deplacerUnElementVers</code> avec <code>PileTableau</code>
+(après avoir vérifier que <code>p</code> est bien une instance de cette classe) pour
+pouvoir faire appel à la méthode <code>nom</code> (voir code de <code>PileTableau</code> ci-dessus).
+</p>
+<div class="org-src-container">
+<pre class="src src-java">    <span style="color: #e45649;">public</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">deplacerUnElementVers</span><span style="color: #4078f2;">(</span><span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span><span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">p</span><span style="color: #4078f2;">)</span> <span style="color: #4078f2;">{</span>
+        <span style="color: #e45649;">if</span> <span style="color: #a626a4;">(</span><span style="color: #4078f2; font-weight: bold;">!</span>vide<span style="color: #50a14f;">()</span> &amp;&amp; p.peutEmpiler<span style="color: #50a14f;">(</span>sommet<span style="color: #b751b6;">()</span><span style="color: #50a14f;">)</span><span style="color: #a626a4;">)</span> <span style="color: #a626a4;">{</span>
+            p.empile<span style="color: #50a14f;">(</span><span style="color: #e45649;">this</span>.depile<span style="color: #b751b6;">()</span><span style="color: #50a14f;">)</span> ;
+            <span style="color: #e45649;">if</span> <span style="color: #50a14f;">(</span>p <span style="color: #e45649;">instanceof</span> PileTableau<span style="color: #50a14f;">)</span>
+                System.out.println<span style="color: #50a14f;">(</span><span style="color: #50a14f;">"Déplacement de "</span> + nom + <span style="color: #50a14f;">" vers "</span>
+                        + <span style="color: #b751b6;">(</span><span style="color: #4078f2;">(</span><span style="color: #986801;">PileTableau</span><span style="color: #a626a4;">&lt;</span><span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span><span style="color: #4078f2;">)</span> p<span style="color: #b751b6;">)</span>.nom<span style="color: #b751b6;">()</span><span style="color: #50a14f;">)</span>;
+        <span style="color: #a626a4;">}</span>
+    <span style="color: #4078f2;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org41d3e74" class="outline-3">
+<h3 id="org41d3e74"><span class="section-number-3">2.4.</span> Rationnels</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+On veut représenter par des objets les nombres rationnels, c’est-à-dire les
+nombres pouvant s’écrire sous la forme <mjx-container class="MathJax CtxtMenu_Attached_0" jax="CHTML" style="font-size: 121.4%; position: relative;" tabindex="0" ctxtmenu_counter="0"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mfrac><mjx-frac><mjx-num><mjx-nstrut></mjx-nstrut><mjx-mi class="mjx-i" size="s"><mjx-c class="mjx-c1D45D TEX-I"></mjx-c></mjx-mi></mjx-num><mjx-dbox><mjx-dtable><mjx-line></mjx-line><mjx-row><mjx-den><mjx-dstrut></mjx-dstrut><mjx-mi class="mjx-i" size="s"><mjx-c class="mjx-c1D45E TEX-I"></mjx-c></mjx-mi></mjx-den></mjx-row></mjx-dtable></mjx-dbox></mjx-frac></mjx-mfrac></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mi>p</mi><mi>q</mi></mfrac></math></mjx-assistive-mml></mjx-container> où <mjx-container class="MathJax CtxtMenu_Attached_0" jax="CHTML" style="font-size: 121.4%; position: relative;" tabindex="0" ctxtmenu_counter="1"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mi class="mjx-i"><mjx-c class="mjx-c1D45D TEX-I"></mjx-c></mjx-mi></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>p</mi></math></mjx-assistive-mml></mjx-container> est un entier
+relatif et <mjx-container class="MathJax CtxtMenu_Attached_0" jax="CHTML" style="font-size: 121.4%; position: relative;" tabindex="0" ctxtmenu_counter="2"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mi class="mjx-i"><mjx-c class="mjx-c1D45E TEX-I"></mjx-c></mjx-mi></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>q</mi></math></mjx-assistive-mml></mjx-container> un entier naturel non nul (i.e. strictement positif).
+</p>
+
+<ol class="org-ol">
+<li>Implantez la classe <code>Rationnel</code> des nombres rationnels et sa méthode
+<code>toString()</code>.</li>
+<li><p>
+Modifiez ensuite la classe <code>Rationnel</code> pour qu’elle implémente l’interface <code>Comparable</code> (du package <code>java.lang</code>). L’interface <code>Comparable&lt;T&gt;</code>
+ est utilisée lorsque l’on souhaite pouvoir comparer des instances d’une
+ même classe (consultez la documentation de l’API pour voir ce qu’il en 
+est des classes <code>Integer</code> et <code>String</code> par exemple).
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #e45649;">public</span> <span style="color: #e45649;">interface</span> <span style="color: #986801;">Comparable</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">T</span><span style="color: #4078f2;">&gt;</span> <span style="color: #4078f2;">{</span>
+   <span style="color: #e45649;">public</span> <span style="color: #986801;">int</span> <span style="color: #a626a4;">compareTo</span><span style="color: #a626a4;">(</span><span style="color: #986801;">T</span> <span style="color: #6a1868;">o</span><span style="color: #a626a4;">)</span> ;
+<span style="color: #4078f2;">}</span>
+</pre>
+</div>
+<p>
+La méthode <code>compareTo</code> retourne :
+</p>
+<ul class="org-ul">
+<li>une valeur strictement négative si l’instance courante est « plus petite » que l’objet <code>o</code>;</li>
+<li>0 si elle est « égale » ;</li>
+<li>une valeur strictement positive si l’instance courante est « plus grande » que l’objet <code>o</code>.</li>
+</ul>
+<p>
+Par exemple: <code>(Integer.valueOf(5)).compareTo(Integer.valueOf(3))</code> renvoie 1.
+</p></li>
+</ol>
+</div>
+<div id="outline-container-orge62a350" class="outline-4">
+<h4 id="orge62a350">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-orge62a350">
+<p>
+La classe <code>Rationnel</code> doit implémenter l’instance de l’interface <code>Comparable&lt;Rationnel&gt;</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #e45649;">public</span> <span style="color: #e45649;">class</span> <span style="color: #986801;">Rationnel</span> <span style="color: #e45649;">implements</span> <span style="color: #986801;">Comparable</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">Rationnel</span><span style="color: #4078f2;">&gt;</span> <span style="color: #4078f2;">{</span>
+    <span style="color: #e45649;">private</span> <span style="color: #e45649;">final</span> <span style="color: #986801;">int</span>  <span style="color: #6a1868;">p</span>;
+    <span style="color: #e45649;">private</span> <span style="color: #e45649;">final</span> <span style="color: #986801;">int</span>  <span style="color: #6a1868;">q</span>;
+
+    <span style="color: #e45649;">public</span> Rationnel<span style="color: #a626a4;">(</span><span style="color: #986801;">int</span> <span style="color: #6a1868;">p</span>, <span style="color: #986801;">int</span> <span style="color: #6a1868;">q</span><span style="color: #a626a4;">)</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">this</span>.p = p;
+        <span style="color: #e45649;">this</span>.q = q;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">int</span> <span style="color: #a626a4;">get_p</span><span style="color: #a626a4;">(){</span>
+        <span style="color: #e45649;">return</span> p;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">int</span> <span style="color: #a626a4;">get_q</span><span style="color: #a626a4;">(){</span>
+        <span style="color: #e45649;">return</span> q;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #b751b6;">@Override</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">int</span> <span style="color: #a626a4;">compareTo</span><span style="color: #a626a4;">(</span><span style="color: #986801;">Rationnel</span> <span style="color: #6a1868;">o</span><span style="color: #a626a4;">)</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">return</span> Integer.compare<span style="color: #50a14f;">(</span>p * o.get_q<span style="color: #b751b6;">()</span>, q * o.get_p<span style="color: #b751b6;">()</span><span style="color: #50a14f;">)</span>;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">String</span> <span style="color: #a626a4;">toString</span><span style="color: #a626a4;">(){</span>
+        <span style="color: #e45649;">return</span> p + <span style="color: #50a14f;">"/"</span> + q;
+    <span style="color: #a626a4;">}</span>
+<span style="color: #4078f2;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgaf5ca78" class="outline-3">
+<h3 id="orgaf5ca78"><span class="section-number-3">2.5.</span> Pile de <code>Comparable</code></h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Peut-on créer une instance de <code>PileTableau</code> qui permette de stocker n’importe
+quels objets qui implémentent l’interface <code>Comparable&lt;T&gt;</code> ? Testez votre
+solution avec une pile dans laquelle vous placerez à la fois des entiers, des
+chaînes de caractères et des rationnels.
+</p>
+</div>
+<div id="outline-container-org926128b" class="outline-4">
+<h4 id="org926128b">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org926128b">
+<p>
+Oui, on peut créer une pile de <code>Comparable&lt;T&gt;</code> avec une variable de type <code>Pile&lt;Comparable&lt;?&gt;&gt;</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-java">        <span style="color: #986801;">Pile</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">Integer</span><span style="color: #4078f2;">&gt;</span> <span style="color: #6a1868;">p1</span> = <span style="color: #e45649;">new</span> <span style="color: #986801;">PileTableau</span><span style="color: #4078f2;">&lt;&gt;(</span><span style="color: #50a14f;">"[p1] Pile d'entiers"</span><span style="color: #4078f2;">)</span>;
+        System.out.println<span style="color: #4078f2;">(</span><span style="color: #50a14f;">"Entrez 3 entiers :"</span><span style="color: #4078f2;">)</span>;
+        <span style="color: #e45649;">for</span> <span style="color: #4078f2;">(</span><span style="color: #986801;">int</span> <span style="color: #6a1868;">i</span>=<span style="color: #da8548; font-weight: bold;">1</span>; i&lt;=<span style="color: #da8548; font-weight: bold;">3</span>; i++<span style="color: #4078f2;">)</span>
+            p1.empile<span style="color: #4078f2;">(</span><span style="color: #a626a4;">(</span><span style="color: #986801;">int</span><span style="color: #a626a4;">)(</span>Math.random<span style="color: #50a14f;">()</span>*<span style="color: #da8548; font-weight: bold;">10</span><span style="color: #a626a4;">)</span><span style="color: #4078f2;">)</span> ;
+        System.out.println<span style="color: #4078f2;">(</span>p1<span style="color: #4078f2;">)</span>;
+        <span style="color: #986801;">Pile</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">String</span><span style="color: #4078f2;">&gt;</span> <span style="color: #6a1868;">p2</span> = <span style="color: #e45649;">new</span> <span style="color: #986801;">PileTableau</span><span style="color: #4078f2;">&lt;&gt;(</span><span style="color: #50a14f;">"[p2] Pile de chaînes"</span><span style="color: #4078f2;">)</span>;
+        <span style="color: #e45649;">for</span> <span style="color: #4078f2;">(</span><span style="color: #986801;">String</span> <span style="color: #6a1868;">s</span> : Arrays.asList<span style="color: #a626a4;">(</span><span style="color: #50a14f;">"un"</span>, <span style="color: #50a14f;">"deux"</span>, <span style="color: #50a14f;">"trois"</span><span style="color: #a626a4;">)</span><span style="color: #4078f2;">)</span>
+            p2.empile<span style="color: #4078f2;">(</span>s<span style="color: #4078f2;">)</span>;
+        System.out.println<span style="color: #4078f2;">(</span>p2<span style="color: #4078f2;">)</span>;
+        <span style="color: #986801;">Pile</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">Rationnel</span><span style="color: #4078f2;">&gt;</span> <span style="color: #6a1868;">p3</span> = <span style="color: #e45649;">new</span> <span style="color: #986801;">PileTableau</span><span style="color: #4078f2;">&lt;&gt;(</span><span style="color: #50a14f;">"[p3] Pile de rationnels"</span><span style="color: #4078f2;">)</span>;
+        <span style="color: #e45649;">for</span> <span style="color: #4078f2;">(</span><span style="color: #986801;">int</span> <span style="color: #6a1868;">i</span>=<span style="color: #da8548; font-weight: bold;">1</span>; i&lt;=<span style="color: #da8548; font-weight: bold;">3</span>; i++<span style="color: #4078f2;">)</span>
+            p3.empile<span style="color: #4078f2;">(</span><span style="color: #e45649;">new</span> <span style="color: #986801;">Rationnel</span><span style="color: #a626a4;">(</span><span style="color: #50a14f;">(</span><span style="color: #986801;">int</span><span style="color: #50a14f;">)(</span>Math.random<span style="color: #b751b6;">()</span>*<span style="color: #da8548; font-weight: bold;">10</span><span style="color: #50a14f;">)</span>, <span style="color: #50a14f;">(</span><span style="color: #986801;">int</span><span style="color: #50a14f;">)(</span>Math.random<span style="color: #b751b6;">()</span>*<span style="color: #da8548; font-weight: bold;">10</span><span style="color: #50a14f;">)</span><span style="color: #a626a4;">)</span><span style="color: #4078f2;">)</span> ;
+        System.out.println<span style="color: #4078f2;">(</span>p3<span style="color: #4078f2;">)</span>;
+
+        <span style="color: #9ca0a4;">/* </span><span style="color: #9ca0a4;">test de pile de comparables</span><span style="color: #9ca0a4;"> */</span>
+        <span style="color: #986801;">Pile</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">Comparable</span><span style="color: #a626a4;">&lt;</span>?<span style="color: #a626a4;">&gt;</span><span style="color: #4078f2;">&gt;</span> <span style="color: #6a1868;">p4</span> = <span style="color: #e45649;">new</span> <span style="color: #986801;">PileTableau</span><span style="color: #4078f2;">&lt;&gt;(</span><span style="color: #50a14f;">"[p4] Pile d'objets comparables"</span><span style="color: #4078f2;">)</span> ;
+        <span style="color: #e45649;">for</span> <span style="color: #4078f2;">(</span><span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span>? <span style="color: #e45649;">extends</span> <span style="color: #986801;">Comparable</span><span style="color: #50a14f;">&lt;</span>?<span style="color: #50a14f;">&gt;</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">p</span> : Arrays.asList<span style="color: #a626a4;">(</span>p1,p2,p3<span style="color: #a626a4;">)</span><span style="color: #4078f2;">)</span>
+            <span style="color: #e45649;">while</span> <span style="color: #4078f2;">(</span><span style="color: #4078f2; font-weight: bold;">!</span>p.vide<span style="color: #a626a4;">()</span><span style="color: #4078f2;">)</span>
+                p4.empile<span style="color: #4078f2;">(</span>p.depile<span style="color: #a626a4;">()</span><span style="color: #4078f2;">)</span>;
+        System.out.println<span style="color: #4078f2;">(</span>p4<span style="color: #4078f2;">)</span>;
+        System.out.println<span style="color: #4078f2;">()</span>;
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdf83578" class="outline-3">
+<h3 id="orgdf83578"><span class="section-number-3">2.6.</span> Copie depuis une autre pile</h3>
+<div class="outline-text-3" id="text-2-6">
+<ul class="org-ul">
+<li>Écrire et tester une méthode d’instance <code>copieDepuis</code> qui copie sur la pile
+courante le sommet de la pile passée en paramètre. Il faudra bien sûr
+ajouter la signature de cette méthode à l’interface <code>Pile&lt;E&gt;</code>.</li>
+<li>Modifier cette méthode pour que la pile passée en paramètre ne soit pas
+nécessairement du même type que la pile courante. Tester votre solution pour
+copier le sommet d’une pile d’<code>Integer</code> sur une pile de <code>Number</code>.</li>
+</ul>
+</div>
+<div id="outline-container-org79d55db" class="outline-4">
+<h4 id="org79d55db">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org79d55db">
+<p>
+Le type du paramètre de la méthode doit être un sous-type de <code>E</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-java">    <span style="color: #e45649;">public</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">copieDepuis</span><span style="color: #4078f2;">(</span><span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span>? <span style="color: #e45649;">extends</span> <span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">p</span><span style="color: #4078f2;">){</span>
+        <span style="color: #e45649;">this</span>.empile<span style="color: #a626a4;">(</span>p.sommet<span style="color: #50a14f;">()</span><span style="color: #a626a4;">)</span>;
+    <span style="color: #4078f2;">}</span>
+</pre>
+</div>
+<p>
+Il faut aussi ajouter la signature de cette méthode à l’interface <code>Pile&lt;E&gt;</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-java">        <span style="color: #e45649;">public</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">copieDepuis</span><span style="color: #4078f2;">(</span><span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span>? <span style="color: #e45649;">extends</span> <span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">p</span><span style="color: #4078f2;">)</span>;
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc5eee31" class="outline-3">
+<h3 id="orgc5eee31"><span class="section-number-3">2.7.</span> Copie vers une autre pile</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+Même question, mais cette fois pour copier sur la pile passée en paramètre, le
+sommet de la pile courante.
+</p>
+</div>
+<div id="outline-container-orgf4b0648" class="outline-4">
+<h4 id="orgf4b0648">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-orgf4b0648">
+<p>
+Le type du paramètre de la méthode doit cette fois être un sur-type de <code>E</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-java">    <span style="color: #e45649;">public</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">copieVers</span><span style="color: #4078f2;">(</span><span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span>? <span style="color: #e45649;">super</span> <span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">p</span><span style="color: #4078f2;">){</span>
+        p.empile<span style="color: #a626a4;">(</span><span style="color: #e45649;">this</span>.sommet<span style="color: #50a14f;">()</span><span style="color: #a626a4;">)</span>;
+    <span style="color: #4078f2;">}</span>
+</pre>
+</div>
+<p>
+Il faut aussi ajouter la signature de cette méthode à l’interface <code>Pile&lt;E&gt;</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-java">        <span style="color: #e45649;">public</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">copieVers</span><span style="color: #4078f2;">(</span><span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span>? <span style="color: #e45649;">super</span> <span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">p</span><span style="color: #4078f2;">)</span>;
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd23a8e1" class="outline-2">
+<h2 id="orgd23a8e1"><span class="section-number-2">3.</span> Quelques méthodes statiques</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Pour la déclaration de méthodes statiques, on ne peut pas faire directement
+référence au paramètre de types de la classe générique. En effet, ça ne ferait
+pas de sens d’y faire référence car le paramètre de type n’est concrétisé qu’à
+l’instantiation de la classe alors que les méthodes statiques sont indépendantes
+des instances.
+</p>
+</div>
+<div id="outline-container-orgefacf8a" class="outline-3">
+<h3 id="orgefacf8a"><span class="section-number-3">3.1.</span> Permuter le sommet</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Écrire une méthode statique <code>swap</code> qui prend en paramètre une <code>Pile</code>
+et permute les deux éléments en son sommet.
+</p>
+</div>
+<div id="outline-container-org461928a" class="outline-4">
+<h4 id="org461928a">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org461928a">
+<p>
+Il faut implémenter une méthode générique:
+</p>
+<div class="org-src-container">
+<pre class="src src-java">    <span style="color: #e45649;">public</span> <span style="color: #e45649;">static</span> <span style="color: #4078f2;">&lt;</span><span style="color: #986801;">E</span><span style="color: #4078f2;">&gt;</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">swap</span><span style="color: #4078f2;">(</span><span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span><span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">p</span><span style="color: #4078f2;">){</span>
+        <span style="color: #986801;">E</span> <span style="color: #6a1868;">tmp1</span>, <span style="color: #6a1868;">tmp2</span>;
+        tmp1 = p.depile<span style="color: #a626a4;">()</span>;
+        tmp2 = p.depile<span style="color: #a626a4;">()</span>;
+        p.empile<span style="color: #a626a4;">(</span>tmp1<span style="color: #a626a4;">)</span>;
+        p.empile<span style="color: #a626a4;">(</span>tmp2<span style="color: #a626a4;">)</span>;
+    <span style="color: #4078f2;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org78e85fe" class="outline-3">
+<h3 id="org78e85fe"><span class="section-number-3">3.2.</span> Empiler sur une pile</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Écrire une méthode statique <code>empileSur</code> qui prend en paramètre une valeur <code>v</code>
+d’un certain type et une pile <code>p</code> dont les éléments ont le même type que <code>v</code>, et
+qui empile la valeur <code>v</code> sur <code>p</code>. Votre méthode n’accepte-t-elle vraiment que des
+valeurs du même type que ceux de <code>p</code> ? Pourquoi ?
+</p>
+</div>
+<div id="outline-container-org0227c26" class="outline-4">
+<h4 id="org0227c26">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org0227c26">
+<div class="org-src-container">
+<pre class="src src-java">    <span style="color: #e45649;">public</span> <span style="color: #e45649;">static</span> <span style="color: #4078f2;">&lt;</span><span style="color: #986801;">E</span><span style="color: #4078f2;">&gt;</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">empileSur</span><span style="color: #4078f2;">(</span><span style="color: #986801;">E</span> <span style="color: #6a1868;">v</span>, <span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span><span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">p</span><span style="color: #4078f2;">){</span>
+        p.empile<span style="color: #a626a4;">(</span>v<span style="color: #a626a4;">)</span>;
+    <span style="color: #4078f2;">}</span>
+</pre>
+</div>
+<p>
+On peut en fait passer à cette méthode une valeur <code>v</code> de n’importe quel
+sous-type de <code>E</code>. Ainsi, si la pile courante est une pile de <code>Comparable&lt;?&gt;</code>, la
+variable de type <code>E</code> est <code>Comparable&lt;?&gt;</code> et <code>v</code> peut-être un <code>Integer</code> car c’est un
+sous-type de <code>Comparable&lt;?&gt;</code>. On peut donc écrire:
+</p>
+<div class="org-src-container">
+<pre class="src src-java">PileTableau.empileSur<span style="color: #4078f2;">(</span><span style="color: #da8548; font-weight: bold;">0</span>,<span style="color: #986801;">p4</span><span style="color: #4078f2;">)</span>;
+</pre>
+</div>
+<p>
+où <code>p4</code> est de type <code>Pile&lt;Comparable&lt;?&gt;&gt;</code>.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgcab82b2" class="outline-3">
+<h3 id="orgcab82b2"><span class="section-number-3">3.3.</span> Copier depuis une pile vers une autre pile</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+Écrire une méthode <code>copieDeVers</code> avec deux paramètres de pile <code>src</code> et <code>dest</code>
+qui copie le sommet de la pile <code>src</code> vers la pile <code>dest</code>. Faites en sorte que
+votre méthode soit la plus générique possible. Trouver trois déclarations de types différentes pour cette méthode!
+</p>
+</div>
+<div id="outline-container-org138ab65" class="outline-4">
+<h4 id="org138ab65">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org138ab65">
+<div class="org-src-container">
+<pre class="src src-java">    <span style="color: #e45649;">public</span> <span style="color: #e45649;">static</span> <span style="color: #4078f2;">&lt;</span><span style="color: #986801;">E</span><span style="color: #4078f2;">&gt;</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">copieDeVers</span><span style="color: #4078f2;">(</span><span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span>? <span style="color: #e45649;">extends</span> <span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">src</span>, <span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span><span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">dest</span><span style="color: #4078f2;">){</span>
+        dest.empile<span style="color: #a626a4;">(</span>src.sommet<span style="color: #50a14f;">()</span><span style="color: #a626a4;">)</span>;
+    <span style="color: #4078f2;">}</span>
+</pre>
+</div>
+<p>
+Dans ce cas, si <code>p1</code> est un pile de <code>Integer</code> et <code>p2</code> une pile de  <code>Number</code>, et qu’on réalise l’appel
+</p>
+<div class="org-src-container">
+<pre class="src src-java">copieDeVers<span style="color: #4078f2;">(</span><span style="color: #986801;">p1</span>,<span style="color: #986801;">p2</span><span style="color: #4078f2;">)</span>;
+</pre>
+</div>
+<p>
+alors la variable de type <code>E</code> est instanciée avec <code>Number</code> et le jocker <code>?</code> est
+instancié avec <code>Integer</code>.
+On peut aussi écrire:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #e45649;">public</span> <span style="color: #e45649;">static</span> <span style="color: #4078f2;">&lt;</span><span style="color: #986801;">E</span><span style="color: #4078f2;">&gt;</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">copieDeVers</span><span style="color: #4078f2;">(</span><span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span><span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">src</span>, <span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span>? <span style="color: #e45649;">super</span> <span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">dest</span><span style="color: #4078f2;">){</span>
+        dest.empile<span style="color: #a626a4;">(</span>src.sommet<span style="color: #50a14f;">()</span><span style="color: #a626a4;">)</span>;
+    <span style="color: #4078f2;">}</span>
+</pre>
+</div>
+<p>
+et dans ce cas, <code>E</code> est instancié avec <code>Integer</code> et <code>?</code> avec <code>Number</code>. On peut aussi
+combiner les deux paramétrages.
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #e45649;">public</span> <span style="color: #e45649;">static</span> <span style="color: #4078f2;">&lt;</span><span style="color: #986801;">E</span><span style="color: #4078f2;">&gt;</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">copieDeVers</span><span style="color: #4078f2;">(</span><span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span>? <span style="color: #e45649;">extends</span> <span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">src</span>, <span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span>? <span style="color: #e45649;">super</span> <span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">dest</span><span style="color: #4078f2;">){</span>
+        dest.empile<span style="color: #a626a4;">(</span>src.sommet<span style="color: #50a14f;">()</span><span style="color: #a626a4;">)</span>;
+    <span style="color: #4078f2;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org3f12e7e" class="outline-3">
+<h3 id="org3f12e7e"><span class="section-number-3">3.4.</span> Empiler toute une pile sur une autre</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+Écrire une méthode <code>empileToutDeVers</code> avec deux paramètres de pile <code>src</code> et <code>dest</code> qui
+empile tous les éléments de la pile <code>src</code> vers la pile <code>dest</code> <b>de façon récursive</b>.
+Faites en sorte que votre méthode soit la plus générique possible.
+</p>
+</div>
+<div id="outline-container-orgfb76d7f" class="outline-4">
+<h4 id="orgfb76d7f">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-orgfb76d7f">
+<div class="org-src-container">
+<pre class="src src-java">    <span style="color: #e45649;">public</span> <span style="color: #e45649;">static</span> <span style="color: #4078f2;">&lt;</span><span style="color: #986801;">E</span><span style="color: #4078f2;">&gt;</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">empileToutSur</span><span style="color: #4078f2;">(</span><span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span>? <span style="color: #e45649;">extends</span> <span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">p1</span>, <span style="color: #986801;">Pile</span><span style="color: #a626a4;">&lt;</span><span style="color: #986801;">E</span><span style="color: #a626a4;">&gt;</span> <span style="color: #6a1868;">p2</span><span style="color: #4078f2;">){</span>
+        <span style="color: #e45649;">if</span> <span style="color: #a626a4;">(</span><span style="color: #4078f2; font-weight: bold;">!</span>p1.vide<span style="color: #50a14f;">()</span><span style="color: #a626a4;">)</span> <span style="color: #a626a4;">{</span>
+            empileSur<span style="color: #50a14f;">(</span>p1.depile<span style="color: #b751b6;">()</span>,p2<span style="color: #50a14f;">)</span>;
+            empileToutSur<span style="color: #50a14f;">(</span>p1,p2<span style="color: #50a14f;">)</span>;
+        <span style="color: #a626a4;">}</span>
+    <span style="color: #4078f2;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org5619102" class="outline-2">
+<h2 id="org5619102"><span class="section-number-2">4.</span> Pile d’Entiers</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org5ccd01d" class="outline-3">
+<h3 id="org5ccd01d"><span class="section-number-3">4.1.</span> <code>PileTableauEntier</code></h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Adapter la classe <code>PileTableau</code> (c’est-à-dire en la recopiant dans un nouveau
+fichier), pour implémenter une classe <code>PileTableauEntier</code> qui implémente <code>Pile&lt;Integer&gt;</code>
+et qui soit donc spécialisée pour les piles d’entiers.
+</p>
+</div>
+<div id="outline-container-org2fcc364" class="outline-4">
+<h4 id="org2fcc364">Solution&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org2fcc364">
+<p>
+Attention, la solution est une classe <b>non générique</b>. L’erreur courante est de déclarer <code>PileTableauEntier</code> ainsi:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #e45649;">public</span> <span style="color: #e45649;">class</span> <span style="color: #986801;">PileTableauEntier</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">Integer</span><span style="color: #4078f2;">&gt;</span> <span style="color: #e45649;">implements</span> <span style="color: #986801;">Pile</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">Integer</span><span style="color: #4078f2;">&gt;</span> <span style="color: #4078f2;">{</span>...
+</pre>
+</div>
+<p>
+qui déclare une classe générique dont le paramètre de type est <code>Integer</code> qui
+porte le même nom que la classe <code>Integer</code> de l’API java! Dans le corps de
+cette classe, <code>Integer</code> fera référence à une variable de type et non à la classe
+<code>Integer</code>! La solution consiste simplement à essentiellement remplacer toutes
+les occurrences de <code>E</code> du corps de la classe <code>PileTableau&lt;E&gt;</code> par <code>Integer</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #e45649;">public</span> <span style="color: #e45649;">class</span> <span style="color: #986801;">PileTableauEntier</span> <span style="color: #e45649;">implements</span> <span style="color: #986801;">Pile</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">Integer</span><span style="color: #4078f2;">&gt;</span> <span style="color: #4078f2;">{</span>
+    <span style="color: #e45649;">private</span> <span style="color: #e45649;">final</span> <span style="color: #986801;">Integer</span> <span style="color: #a626a4;">[]</span> <span style="color: #6a1868;">elements</span> ;  <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">les éléments contenus dans la pile</span>
+    <span style="color: #e45649;">private</span> <span style="color: #986801;">int</span> <span style="color: #6a1868;">nbElem</span> = <span style="color: #da8548; font-weight: bold;">0</span> ; <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">le nombre d’éléments dans la pile</span>
+    <span style="color: #e45649;">private</span> <span style="color: #e45649;">final</span> <span style="color: #986801;">String</span> <span style="color: #6a1868;">nom</span> ;     <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">nom de la pile : information supplémentaire propre à PileTableau</span>
+
+    <span style="color: #84888b; font-style: italic;">/** Constructeur qui crée une pile vide et lui donne un nom */</span>
+    <span style="color: #e45649;">public</span> PileTableauEntier<span style="color: #a626a4;">(</span>String nom<span style="color: #a626a4;">)</span> <span style="color: #a626a4;">{</span>
+        elements = <span style="color: #e45649;">new</span> <span style="color: #986801;">Integer</span><span style="color: #50a14f;">[</span>MAX_ELEMENTS<span style="color: #50a14f;">]</span> ;
+        <span style="color: #e45649;">this</span>.nom = nom ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #9ca0a4;">/* </span><span style="color: #9ca0a4;">IMPLEMENTATION DE L'INTERFACE PILE</span><span style="color: #9ca0a4;"> */</span>
+
+    <span style="color: #84888b; font-style: italic;">/** teste si la pile est vide */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">boolean</span> <span style="color: #a626a4;">vide</span><span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">return</span> <span style="color: #50a14f;">(</span>nbElem == <span style="color: #da8548; font-weight: bold;">0</span><span style="color: #50a14f;">)</span> ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** teste si la pile est pleine */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">boolean</span> <span style="color: #a626a4;">pleine</span> <span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">return</span> <span style="color: #50a14f;">(</span>nbElem == MAX_ELEMENTS<span style="color: #50a14f;">)</span> ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** teste si la pile peut empiler x */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">boolean</span> <span style="color: #a626a4;">peutEmpiler</span> <span style="color: #a626a4;">(</span><span style="color: #986801;">Integer</span> <span style="color: #6a1868;">x</span><span style="color: #a626a4;">)</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">return</span> <span style="color: #50a14f;">(</span><span style="color: #4078f2; font-weight: bold;">!</span>pleine<span style="color: #b751b6;">()</span><span style="color: #50a14f;">)</span> ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** renvoie la valeur de l'objet sur le sommet de la pile */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">Integer</span> <span style="color: #a626a4;">sommet</span><span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">if</span> <span style="color: #50a14f;">(</span>vide<span style="color: #b751b6;">()</span><span style="color: #50a14f;">)</span> <span style="color: #e45649;">return</span> <span style="color: #b751b6;">null</span> ;
+        <span style="color: #e45649;">else</span> <span style="color: #e45649;">return</span> elements<span style="color: #50a14f;">[</span>nbElem-<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #50a14f;">]</span> ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** renvoie la valeur de l'objet sur le sommet de la pile</span>
+<span style="color: #84888b; font-style: italic;">     * et l'enlève */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">Integer</span> <span style="color: #a626a4;">depile</span><span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">if</span> <span style="color: #50a14f;">(</span>vide<span style="color: #b751b6;">()</span><span style="color: #50a14f;">)</span> <span style="color: #e45649;">return</span> <span style="color: #b751b6;">null</span> ;
+        nbElem-- ;
+        <span style="color: #e45649;">return</span> elements<span style="color: #50a14f;">[</span>nbElem<span style="color: #50a14f;">]</span> ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** ajoute un objet sur le sommet de la pile */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">empile</span><span style="color: #a626a4;">(</span><span style="color: #986801;">Integer</span> <span style="color: #6a1868;">o</span><span style="color: #a626a4;">)</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">if</span> <span style="color: #50a14f;">(</span>peutEmpiler<span style="color: #b751b6;">(</span>o<span style="color: #b751b6;">)</span><span style="color: #50a14f;">)</span> <span style="color: #50a14f;">{</span>
+            elements<span style="color: #b751b6;">[</span>nbElem<span style="color: #b751b6;">]</span> = o ;
+            nbElem++ ;
+        <span style="color: #50a14f;">}</span>
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** vide la pile */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">vider</span><span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+        nbElem = <span style="color: #da8548; font-weight: bold;">0</span> ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** compte le nombre d'éléments présents dans la pile */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">int</span> <span style="color: #a626a4;">nbElements</span><span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">return</span> nbElem ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">deplacerUnElementVers</span><span style="color: #a626a4;">(</span><span style="color: #986801;">Pile</span><span style="color: #50a14f;">&lt;</span><span style="color: #986801;">Integer</span><span style="color: #50a14f;">&gt;</span> <span style="color: #6a1868;">p</span><span style="color: #a626a4;">)</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">if</span> <span style="color: #50a14f;">(</span><span style="color: #4078f2; font-weight: bold;">!</span>vide<span style="color: #b751b6;">()</span> &amp;&amp; p.peutEmpiler<span style="color: #b751b6;">(</span>sommet<span style="color: #4078f2;">()</span><span style="color: #b751b6;">)</span><span style="color: #50a14f;">)</span> <span style="color: #50a14f;">{</span>
+            p.empile<span style="color: #b751b6;">(</span><span style="color: #e45649;">this</span>.depile<span style="color: #4078f2;">()</span><span style="color: #b751b6;">)</span> ;
+            <span style="color: #e45649;">if</span> <span style="color: #b751b6;">(</span>p <span style="color: #e45649;">instanceof</span> PileTableauEntier<span style="color: #b751b6;">)</span>
+                System.out.println<span style="color: #b751b6;">(</span><span style="color: #50a14f;">"Déplacement de "</span> + nom + <span style="color: #50a14f;">" vers "</span>
+                + <span style="color: #4078f2;">(</span><span style="color: #a626a4;">(</span><span style="color: #986801;">PileTableauEntier</span><span style="color: #a626a4;">)</span> p<span style="color: #4078f2;">)</span>.nom<span style="color: #4078f2;">()</span><span style="color: #b751b6;">)</span>;
+        <span style="color: #50a14f;">}</span>
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** affichage */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">String</span> <span style="color: #a626a4;">toString</span><span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+        <span style="color: #986801;">StringBuilder</span> <span style="color: #6a1868;">s</span> = <span style="color: #e45649;">new</span> <span style="color: #986801;">StringBuilder</span><span style="color: #50a14f;">(</span>nom + <span style="color: #50a14f;">": ["</span><span style="color: #50a14f;">)</span>;
+        <span style="color: #e45649;">for</span> <span style="color: #50a14f;">(</span><span style="color: #986801;">int</span> <span style="color: #6a1868;">i</span> = nbElem-<span style="color: #da8548; font-weight: bold;">1</span>; i&gt;=<span style="color: #da8548; font-weight: bold;">0</span>; i--<span style="color: #50a14f;">)</span> <span style="color: #50a14f;">{</span>
+            s.append<span style="color: #b751b6;">(</span>elements<span style="color: #4078f2;">[</span>i<span style="color: #4078f2;">]</span>.toString<span style="color: #4078f2;">()</span><span style="color: #b751b6;">)</span>;
+            <span style="color: #e45649;">if</span> <span style="color: #b751b6;">(</span>i&gt;<span style="color: #da8548; font-weight: bold;">0</span><span style="color: #b751b6;">)</span> s.append<span style="color: #b751b6;">(</span><span style="color: #50a14f;">"; "</span><span style="color: #b751b6;">)</span>;
+            <span style="color: #e45649;">else</span> s.append<span style="color: #b751b6;">(</span><span style="color: #50a14f;">"]"</span><span style="color: #b751b6;">)</span>;
+        <span style="color: #50a14f;">}</span>
+        <span style="color: #e45649;">return</span> s.toString<span style="color: #50a14f;">()</span>;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">Méthode d'instance additionnelle</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">copieDepuis</span><span style="color: #a626a4;">(</span><span style="color: #986801;">Pile</span><span style="color: #50a14f;">&lt;</span>? <span style="color: #e45649;">extends</span> <span style="color: #986801;">Integer</span><span style="color: #50a14f;">&gt;</span> <span style="color: #6a1868;">p</span><span style="color: #a626a4;">){</span>
+        <span style="color: #e45649;">this</span>.empile<span style="color: #50a14f;">(</span>p.sommet<span style="color: #b751b6;">()</span><span style="color: #50a14f;">)</span>;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">copieVers</span><span style="color: #a626a4;">(</span><span style="color: #986801;">Pile</span><span style="color: #50a14f;">&lt;</span>? <span style="color: #e45649;">super</span> <span style="color: #986801;">Integer</span><span style="color: #50a14f;">&gt;</span> <span style="color: #6a1868;">p</span><span style="color: #a626a4;">){</span>
+        p.empile<span style="color: #50a14f;">(</span><span style="color: #e45649;">this</span>.sommet<span style="color: #b751b6;">()</span><span style="color: #50a14f;">)</span>;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">String</span> <span style="color: #a626a4;">nom</span><span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span> <span style="color: #e45649;">return</span> nom ; <span style="color: #a626a4;">}</span>
+<span style="color: #4078f2;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orge867669" class="outline-3">
+<h3 id="orge867669"><span class="section-number-3">4.2.</span> Tests</h3>
+<div class="outline-text-3" id="text-4-2">
+<ul class="org-ul">
+<li>Peut-on instancier une variable de type <code>Pile&lt;Number&gt;</code> avec une instance de
+<code>PileTableauEntier</code> ? Tester et expliquer pourquoi cela fonctionne ou non.</li>
+<li>Peut-on instancier une variable de type <code>Pile&lt;Integer&gt;</code> avec une instance de
+<code>PileTableauEntier</code> ? Tester et expliquer pourquoi cela fonctionne ou non.</li>
+</ul>
+</div>
+<div id="outline-container-org2d37546" class="outline-4">
+<h4 id="org2d37546">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org2d37546">
+<ul class="org-ul">
+<li><p>
+On ne peut pas écrire:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #986801;">Pile</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">Number</span><span style="color: #4078f2;">&gt;</span> <span style="color: #6a1868;">p</span> = <span style="color: #e45649;">new</span> <span style="color: #986801;">PileTableauEntier</span><span style="color: #4078f2;">(</span><span style="color: #50a14f;">"Pile de Number"</span><span style="color: #4078f2;">)</span>;
+</pre>
+</div>
+<p>
+En effet, pour pouvoir réaliser cette affectation, il faudrait que <code>PileTableauEntier</code> soit un sous type de <code>Pile&lt;Number&gt;</code> ce qui n’est pas le cas, car <code>Pile&lt;Number&gt;</code> est un type générique et que, en java, les types génériques ne sont pas co-variants.
+</p></li>
+<li><p>
+On peut par contre écrire:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #986801;">Pile</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">Integer</span><span style="color: #4078f2;">&gt;</span> <span style="color: #6a1868;">p</span> = <span style="color: #e45649;">new</span> <span style="color: #986801;">PileTableauEntier</span><span style="color: #4078f2;">(</span><span style="color: #50a14f;">"Pile de Number"</span><span style="color: #4078f2;">)</span>;
+</pre>
+</div>
+<p>
+car <code>PileTableauEntier</code> implémente l’interface <code>Pile&lt;Integer&gt;</code> qui induit la
+relation de sous-typage entre <code>PileTableauEntier</code> et <code>Pile&lt;Integer&gt;</code>.
+</p></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd3f0642" class="outline-2">
+<h2 id="orgd3f0642"><span class="section-number-2">5.</span> Les tours de Hanoï</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Vous aller implémenter les tour de Hanoï à l’aide de votre classe <code>PileTableau</code>. On considère
+l’interface <code>Disque</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #84888b; font-style: italic;">/** Un Disque est un objet ayant un diamètre */</span>
+<span style="color: #e45649;">public</span> <span style="color: #e45649;">interface</span> <span style="color: #986801;">Disque</span> 
+<span style="color: #4078f2;">{</span>
+    <span style="color: #84888b; font-style: italic;">/** Méthode donnant le diamètre du disque */</span>
+    <span style="color: #986801;">int</span> <span style="color: #a626a4;">diametre</span><span style="color: #a626a4;">()</span> ;    
+<span style="color: #4078f2;">}</span>
+</pre>
+</div>
+</div>
+<div id="outline-container-org03b3d06" class="outline-3">
+<h3 id="org03b3d06"><span class="section-number-3">5.1.</span> <code>DisqueHanoi</code></h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+Écrire la classe <code>DisqueHanoi</code> qui implémente les interfaces <code>Disque</code> et <code>Comparable&lt;Disque&gt;</code>.
+</p>
+</div>
+<div id="outline-container-orgef45394" class="outline-4">
+<h4 id="orgef45394">Solution&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-orgef45394">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #e45649;">public</span> <span style="color: #e45649;">class</span> <span style="color: #986801;">DisqueHanoi</span> <span style="color: #e45649;">implements</span> <span style="color: #986801;">Disque</span>, <span style="color: #986801;">Comparable</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">Disque</span><span style="color: #4078f2;">&gt;</span> <span style="color: #4078f2;">{</span>
+    <span style="color: #9ca0a4;">// </span><span style="color: #9ca0a4;">le diamètre du disque</span>
+    <span style="color: #e45649;">private</span> <span style="color: #986801;">int</span> <span style="color: #6a1868;">diametre</span> = <span style="color: #da8548; font-weight: bold;">1</span> ;
+
+    <span style="color: #84888b; font-style: italic;">/** On construit une instance de DisqueHanoi en spécifiant son diamètre</span>
+<span style="color: #84888b; font-style: italic;">     * </span><span style="color: #b751b6; font-style: italic;">@param</span><span style="color: #84888b; font-style: italic;"> d entier positif donnant le diamètre du disque */</span>
+    <span style="color: #e45649;">public</span> DisqueHanoi<span style="color: #a626a4;">(</span><span style="color: #986801;">int</span> <span style="color: #6a1868;">d</span><span style="color: #a626a4;">)</span> <span style="color: #a626a4;">{</span> 
+    diametre = d ;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** Affichage élémentaire d'un disque</span>
+<span style="color: #84888b; font-style: italic;">     *  </span><span style="color: #b751b6; font-style: italic;">@return</span><span style="color: #84888b; font-style: italic;"> une chaîne donnant la valeur du diamètre */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">String</span> <span style="color: #a626a4;">toString</span><span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span> 
+    <span style="color: #e45649;">return</span> <span style="color: #50a14f;">""</span> + diametre ; 
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">int</span> <span style="color: #a626a4;">diametre</span><span style="color: #a626a4;">()</span> <span style="color: #a626a4;">{</span>
+    <span style="color: #e45649;">return</span> diametre ; 
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">int</span> <span style="color: #a626a4;">compareTo</span><span style="color: #a626a4;">(</span><span style="color: #986801;">Disque</span> <span style="color: #6a1868;">o</span><span style="color: #a626a4;">)</span> <span style="color: #a626a4;">{</span>
+    <span style="color: #e45649;">return</span> <span style="color: #50a14f;">(</span>diametre - o.diametre<span style="color: #b751b6;">()</span><span style="color: #50a14f;">)</span> ;       
+    <span style="color: #a626a4;">}</span>
+<span style="color: #4078f2;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org0cc4d13" class="outline-3">
+<h3 id="org0cc4d13"><span class="section-number-3">5.2.</span> <code>PileHanoi</code></h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+Écrivez la classe <code>PileHanoi</code> qui est une pile de disques de Hanoï qui respecte les règles suivantes:
+</p>
+<ul class="org-ul">
+<li>l’empilement ne peut avoir lieu que si le disque à empiler est plus petit que celui du sommet;</li>
+<li>le déplacement d’un disque vers une autre pile ne peut donc se faire qu’aux mêmes conditions;</li>
+<li>l’affichage de la pile commence par la base, et on se contente d’afficher le diamètre des disques.</li>
+</ul>
+<p>
+La méthode <code>toString</code> affichera le nom de la pile et la liste des diamètres des
+disques empilés de la base au sommet. Ainsi, une pile «&nbsp;A&nbsp;» ayant un disque de
+diamètre 1 empilé sur un disque de diamètre 2 lui-même empilé sur un disque de
+diamètre 3 sera affiché comme ceci:
+</p>
+<pre class="example" id="orgb9edb0a">A: 3 2 1
+</pre>
+</div>
+<div id="outline-container-orgcb5febc" class="outline-4">
+<h4 id="orgcb5febc">Solution&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-orgcb5febc">
+<p>
+Il faut hériter de <code>PileTableau</code> en réinstanciant le tableau <code>elements</code> dans le
+constructeur pour s’assurer que les éléments de ce tableau sont bien de type
+<code>DisqueHanoi</code>. Dans le cas contraire, ils seront de type <code>Object</code> et des erreurs
+de transtypage seront produites à l’exécution. Il faut aussi réécrire la méthode
+<code>peutEmpiler</code> pour garantir les contraintes d’empilement de disques.
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #e45649;">public</span> <span style="color: #e45649;">class</span> <span style="color: #986801;">PileHanoi</span> <span style="color: #e45649;">extends</span> <span style="color: #986801;">PileTableau</span><span style="color: #4078f2;">&lt;</span><span style="color: #986801;">DisqueHanoi</span><span style="color: #4078f2;">&gt;</span> <span style="color: #4078f2;">{</span>
+    <span style="color: #e45649;">public</span> PileHanoi<span style="color: #a626a4;">(){</span>
+        <span style="color: #e45649;">this</span>.elements = <span style="color: #e45649;">new</span> <span style="color: #986801;">DisqueHanoi</span><span style="color: #50a14f;">[</span>MAX_ELEMENTS<span style="color: #50a14f;">]</span>;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #e45649;">public</span> PileHanoi<span style="color: #a626a4;">(</span>String nom<span style="color: #a626a4;">){</span>
+         <span style="color: #e45649;">this</span><span style="color: #50a14f;">()</span>;
+         <span style="color: #e45649;">this</span>.nom = nom;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #84888b; font-style: italic;">/** teste si l'empilement d'un objet o est possible */</span>
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">boolean</span> <span style="color: #a626a4;">peutEmpiler</span><span style="color: #a626a4;">(</span><span style="color: #986801;">DisqueHanoi</span> <span style="color: #6a1868;">e</span><span style="color: #a626a4;">)</span>
+    <span style="color: #a626a4;">{</span>
+        <span style="color: #e45649;">if</span> <span style="color: #50a14f;">(</span><span style="color: #b751b6;">(</span>e == <span style="color: #b751b6;">null</span><span style="color: #b751b6;">)</span> || <span style="color: #b751b6;">(</span>pleine<span style="color: #4078f2;">()</span><span style="color: #b751b6;">)</span><span style="color: #50a14f;">)</span>
+            <span style="color: #e45649;">return</span> <span style="color: #b751b6;">false</span> ;
+        <span style="color: #e45649;">else</span>
+            <span style="color: #e45649;">return</span> <span style="color: #50a14f;">(</span>vide<span style="color: #b751b6;">()</span> || <span style="color: #b751b6;">(</span>e.compareTo<span style="color: #4078f2;">(</span>sommet<span style="color: #a626a4;">()</span><span style="color: #4078f2;">)</span> &lt; <span style="color: #da8548; font-weight: bold;">0</span><span style="color: #b751b6;">)</span><span style="color: #50a14f;">)</span>;
+    <span style="color: #a626a4;">}</span>
+
+    <span style="color: #e45649;">public</span> <span style="color: #986801;">String</span> <span style="color: #a626a4;">toString</span><span style="color: #a626a4;">()</span>
+    <span style="color: #a626a4;">{</span>
+        <span style="color: #986801;">String</span> <span style="color: #6a1868;">s</span> = <span style="color: #50a14f;">""</span> ;
+        <span style="color: #e45649;">for</span> <span style="color: #50a14f;">(</span><span style="color: #986801;">int</span> <span style="color: #6a1868;">i</span> = <span style="color: #da8548; font-weight: bold;">0</span>; i &lt; <span style="color: #e45649;">this</span>.nbElem; i++<span style="color: #50a14f;">){</span>
+            s += <span style="color: #50a14f;">" "</span> + <span style="color: #e45649;">this</span>.elements<span style="color: #b751b6;">[</span>i<span style="color: #b751b6;">]</span>;
+        <span style="color: #50a14f;">}</span>
+        s += <span style="color: #50a14f;">"\n"</span> ;
+        <span style="color: #e45649;">return</span> nom + <span style="color: #50a14f;">":"</span> + s ;
+    <span style="color: #a626a4;">}</span>
+<span style="color: #4078f2;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org3046278" class="outline-3">
+<h3 id="org3046278"><span class="section-number-3">5.3.</span> Jeu</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+Récupérez également <code>Hanoi.java</code> pour tester votre classe <code>PileHanoi</code>. Ce
+programme initialise les trois piles nécessaires et les affiche, puis attend des
+ordres de déplacement d’une pile à l’autre en affichant le résultat à chaque
+fois.
+</p>
+
+<p>
+Exemple d’exécution:
+</p>
+<pre class="example" id="orgeec35af">A : 4 3 2 1
+B:
+C:
+Déplacement de : A
+Vers : B
+Je déplace un disque de A vers B
+A : 4 3 2
+B: 1
+C:
+Déplacement de : A
+Vers : B
+Impossible !
+A : 4 3 2
+B: 1
+C:
+Déplacement de : STOP
+OK ! Terminé...
+</pre>
+</div>
+</div>
+<div id="outline-container-org764843b" class="outline-3">
+<h3 id="org764843b"><span class="section-number-3">5.4.</span> Résolution automatique</h3>
+<div class="outline-text-3" id="text-5-4">
+<p>
+Écrivez dans <code>PileHanoi</code> une méthode récursive
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #986801;">void</span> <span style="color: #a626a4;">deplacerDesDisques</span><span style="color: #4078f2;">(</span><span style="color: #986801;">int</span> <span style="color: #6a1868;">n</span>, <span style="color: #986801;">PileHanoi</span> <span style="color: #6a1868;">dest</span>, <span style="color: #986801;">PileHanoi</span> <span style="color: #6a1868;">interm</span><span style="color: #4078f2;">)</span>
+</pre>
+</div>
+<p>
+qui déplace <code>n</code> disques (un par un), de la pile courante vers la pile <code>dest</code> en passant si besoin par la pile <code>interm</code>. Puis testez cette méthode!
+</p>
+</div>
+<div id="outline-container-orgb7c44b2" class="outline-4">
+<h4 id="orgb7c44b2">Solution&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-orgb7c44b2">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #e45649;">public</span> <span style="color: #986801;">void</span> <span style="color: #a626a4;">deplacerDesDisques</span><span style="color: #4078f2;">(</span><span style="color: #986801;">int</span> <span style="color: #6a1868;">n</span>, <span style="color: #986801;">PileHanoi</span> <span style="color: #6a1868;">dest</span>, <span style="color: #986801;">PileHanoi</span> <span style="color: #6a1868;">interm</span><span style="color: #4078f2;">)</span>
+<span style="color: #4078f2;">{</span>
+    <span style="color: #e45649;">if</span> <span style="color: #a626a4;">(</span>n&gt;<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #a626a4;">)</span>
+        <span style="color: #a626a4;">{</span>
+            deplacerDesDisques<span style="color: #50a14f;">(</span>n-<span style="color: #da8548; font-weight: bold;">1</span>, interm, dest<span style="color: #50a14f;">)</span> ;
+            deplacerDesDisques<span style="color: #50a14f;">(</span><span style="color: #da8548; font-weight: bold;">1</span>, dest, interm<span style="color: #50a14f;">)</span> ;
+            interm.deplacerDesDisques<span style="color: #50a14f;">(</span>n-<span style="color: #da8548; font-weight: bold;">1</span>, dest, <span style="color: #e45649;">this</span><span style="color: #50a14f;">)</span> ;
+        <span style="color: #a626a4;">}</span>
+    <span style="color: #e45649;">else</span>
+        deplacerUnElementVers<span style="color: #a626a4;">(</span>dest<span style="color: #a626a4;">)</span> ;
+<span style="color: #4078f2;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Auteur: Cédric Lhoussaine</p>
+</div>
+
+
+<protonpass-root-1955 data-protonpass-role="root" data-protonpass-theme="os"></protonpass-root-1955><script src="moz-extension://62e3ddd7-659b-49bf-87ff-8a186b15d1b4/js/js.js"></script></body></html>

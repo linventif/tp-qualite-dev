@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Programmation fonctionnelle avec Kotlin</title>
+<meta name="author" content="Cédric Lhoussaine">
+<meta name="generator" content="Org Mode">
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="Programmation%20fonctionnelle%20avec%20Kotlin_files/style.css">
+<style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style></head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Programmation fonctionnelle avec Kotlin
+<br>
+<span class="subtitle">BUT Informatique - S5 - Qualité de développement</span>
+</h1>
+<div id="outline-container-orga0be8ef" class="outline-2">
+<h2 id="orga0be8ef"><span class="section-number-2">1.</span> Préliminaires</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orga152b05" class="outline-3">
+<h3 id="orga152b05"><span class="section-number-3">1.1.</span> Classes sealed</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Nous allons utiliser une catégorie particulière de classes de Kotlin: les
+classes «&nbsp;sealed&nbsp;». Sans rentrer dans tous les détails de ces classes (voir pour
+cela la <a href="https://kotlinlang.org/docs/sealed-classes.html">documentation Kotlin</a>), ces classes présentent l’avantage de contrôler
+leur utilisation et de déterminer statiquement (i.e. à la compilation) toutes
+classes qui sont sous-types de cette classe sealed. À titre d’exemple,
+considérons la classe sealed <code>Shape</code> et 3 classes qui héritent de <code>Shape</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #ff79c6;">sealed</span> <span style="color: #ff79c6;">class</span> <span style="color: #bd93f9;">Shape</span>
+<span style="color: #ff79c6;">data</span> <span style="color: #ff79c6;">class</span> <span style="color: #bd93f9;">Rectangle</span>(<span style="color: #ff79c6;">val</span> <span style="color: #ffc9e8;">longueur</span> : <span style="color: #bd93f9;">Double</span>, <span style="color: #ff79c6;">val</span> <span style="color: #ffc9e8;">largeur</span> : <span style="color: #bd93f9;">Double</span>) : <span style="color: #bd93f9;">Shape</span>()
+<span style="color: #ff79c6;">data</span> <span style="color: #ff79c6;">class</span> <span style="color: #bd93f9;">Cercle</span>(<span style="color: #ff79c6;">val</span> <span style="color: #ffc9e8;">rayon</span>: <span style="color: #bd93f9;">Double</span>) : <span style="color: #bd93f9;">Shape</span>()
+<span style="color: #ff79c6;">object</span> <span style="color: #bd93f9;">Point</span> : <span style="color: #bd93f9;">Shape</span>()
+</pre>
+</div>
+<p>
+Les utilisateurs de <code>Shape</code> ne sont pas autorisés à écrire d’autres classes qui
+hériteraient de <code>Shape</code> car celle-ci est sealed.
+</p>
+
+<p>
+La structure de contrôle <code>when</code> (vues précédemment en altertive à <code>if</code>… <code>else</code>)
+permet aussi de tester le type d’une valeur (en utilisant le mot-clé <code>is</code>) et
+ainsi de réaliser une forme (restreinte) de filtrage de motif qu’on retrouve
+dans la plupart des languages fonctionnels (Haskell, OCaml, Scala, etc.). Ainsi
+on peut écrire une fonction qui calcule la surface d’une forme quelconque:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">surface</span>(forme : <span style="color: #bd93f9;">Shape</span>) : <span style="color: #bd93f9;">Double</span> = <span style="color: #ff79c6;">when</span> (forme) {
+    <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Rectangle</span> -&gt; sqrt(forme.longueur.pow(<span style="color: #bd93f9; font-weight: bold;">2</span>)+forme.largeur.pow(<span style="color: #bd93f9; font-weight: bold;">2</span>))
+    <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cercle</span> -&gt; forme.rayon.pow(<span style="color: #bd93f9; font-weight: bold;">2</span>) * kotlin.math.<span style="color: #bd93f9;">PI</span>
+    <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Point</span> -&gt; <span style="color: #bd93f9; font-weight: bold;">0.0</span>
+}
+</pre>
+</div>
+<p>
+Deux remarques:
+</p>
+<ul class="org-ul">
+<li>Le fait que <code>Shape</code> soit une classe <code>sealed</code> permet au compilateur de vérifier que
+le filtrage est exhaustif, c’est-à-dire qu’on a considéré tous les cas
+possibles de formes. Si <code>Shape</code> n’était pas <code>sealed</code> il serait nécessaire
+d’ajouter une clause <code>else</code>.</li>
+<li>Le filtrage sur les types permet de faire ce qui est appelé des «&nbsp;smartcast&nbsp;»
+c’est-à-dire de surcharger le type de forme (initialement <code>Shape</code>) en type
+<code>Rectangle</code> dans la première branche et d’accéder aux attributs de ce type en
+toute sécurité.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org7d45e90" class="outline-3">
+<h3 id="org7d45e90"><span class="section-number-3">1.2.</span> Sous-typage</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Dans ce TP nous allons utiliser des classes génériques <i>covariantes</i>. En Kotlin,
+la covariance s’exprime simplement à l’aide du mot clé <code>out</code> qui annote la
+variable de type de la classe générique. Ainsi, la classe <code>Liste</code> que nous allons
+utiliser, est déclarée par <code>Liste&lt;out A&gt;</code>. La covariance signifie, par exemple,
+que là où est attendue une liste de <code>Number</code>, on pourra passer une liste de <code>Int</code> ou
+de <code>Double</code> ou de tout autre sous-type de <code>Numbre</code>. En d’autres termes si <code>T1</code> est un
+sous-type de <code>T2</code> alors <code>Liste&lt;T1&gt;</code> est aussi un sous-type de <code>Liste&lt;T2&gt;</code> (grâce à
+l’annotation <code>out</code> sur le paramètre de type de <code>Liste</code>).
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org1aaba5d" class="outline-2">
+<h2 id="org1aaba5d"><span class="section-number-2">2.</span> Listes</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Récupérez sur Moodle le fichier <code>Liste.kt</code>.
+</p>
+
+<p>
+Nous allons ici utiliser notre propre type de listes et implémenter nos propres
+fonctions sur les listes:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #ff79c6;">sealed</span> <span style="color: #ff79c6;">class</span> <span style="color: #bd93f9;">Liste&lt;out</span> <span style="color: #bd93f9;">A&gt;</span>{
+    <span style="color: #ff79c6;">companion</span> <span style="color: #ff79c6;">object</span> {
+        <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">Factory */</span>
+        <span style="color: #ff79c6;">fun</span> &lt;<span style="color: #bd93f9;">A&gt;</span> of(<span style="color: #ff79c6;">vararg</span> xs : <span style="color: #bd93f9;">A</span>) : <span style="color: #bd93f9;">Liste&lt;A&gt;</span> =
+            <span style="color: #ff79c6;">if</span> (xs.isEmpty()) <span style="color: #bd93f9;">Nil</span>
+            <span style="color: #ff79c6;">else</span> <span style="color: #bd93f9;">Cons</span>(xs[<span style="color: #bd93f9; font-weight: bold;">0</span>], of(*xs.sliceArray(<span style="color: #bd93f9; font-weight: bold;">1</span> until xs.size)))
+    }
+}
+
+<span style="color: #ff79c6;">object</span> <span style="color: #bd93f9;">Nil</span> : <span style="color: #bd93f9;">Liste&lt;Nothing&gt;</span>()
+<span style="color: #ff79c6;">data</span> <span style="color: #ff79c6;">class</span> <span style="color: #bd93f9;">Cons&lt;out</span> <span style="color: #bd93f9;">A&gt;</span>(<span style="color: #ff79c6;">val</span> <span style="color: #ffc9e8;">head</span> : <span style="color: #bd93f9;">A</span>, <span style="color: #ff79c6;">val</span> <span style="color: #ffc9e8;">tail</span> : <span style="color: #bd93f9;">Liste&lt;A&gt;</span>) : <span style="color: #bd93f9;">Liste&lt;A&gt;</span>()
+</pre>
+</div>
+<p>
+<code>Nil</code> désigne la liste vide et la data classe <code>Cons</code> (pour <i>Construct</i>) la paire
+formée d’un élément et d’une queue (i.e. la liste suivant le premier élément).
+Ces deux classes héritent de (et sont donc de type) <code>Liste</code>. La fonction (<i>factory</i>)
+prédéfinie <code>of</code>, semblable à <code>listOf</code>, permet de construire facilement des listes.
+</p>
+</div>
+<div id="outline-container-orga93bb32" class="outline-3">
+<h3 id="orga93bb32"><span class="section-number-3">2.1.</span> Somme et produit</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>Écrire la fonction récursive <code>sum</code> (membre de l’objet compagnon de <code>Liste</code>) sur
+les listes de <code>Int</code>. Vérifier qu’on ne peut pas l’appliquer sur une liste dont
+les éléments ont un type différent de <code>Int</code>.</li>
+<li>Même question pour le produit (fonction <code>product</code>). Quelle doit être la valeur
+de <code>product</code> pour les listes vides ?</li>
+</ul>
+</div>
+<div id="outline-container-orgc9c84b9" class="outline-4">
+<h4 id="orgc9c84b9">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-orgc9c84b9">
+<div class="org-src-container">
+<pre class="src src-kotlin">        <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">Somme d'entiers */</span>
+        <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">sum</span>(l : <span style="color: #bd93f9;">Liste&lt;Int&gt;</span>) : <span style="color: #bd93f9;">Int</span> = <span style="color: #ff79c6;">when</span> (l) {
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Nil</span> -&gt; <span style="color: #bd93f9; font-weight: bold;">0</span>
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; l.head + sum(l.tail)
+        }
+
+        <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">produit de doubles */</span>
+        <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">product</span>(l : <span style="color: #bd93f9;">Liste&lt;Double&gt;</span>) : <span style="color: #bd93f9;">Double</span> = <span style="color: #ff79c6;">when</span> (l) {
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Nil</span> -&gt; <span style="color: #bd93f9; font-weight: bold;">1.0</span>
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; l.head * product(l.tail)
+        }
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org1c92c64" class="outline-3">
+<h3 id="org1c92c64"><span class="section-number-3">2.2.</span> Tête et queue</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Écrire les fonctions de destructuration <code>head(l)</code> et <code>tail(l)</code> qui permettent,
+respectivement, de récupérer le premier élément et la queue de la liste <code>l</code>. Pour
+les cas problématiques, on déclenchera une exception <code>IllegalStateException</code>. En
+Kotlin, les exceptions sont déclenchées avec <code>throw</code> (voir rapidement cette
+<a href="https://kotlinlang.org/docs/exceptions.html">documentation</a>).
+</p>
+</div>
+<div id="outline-container-orgb3ed06b" class="outline-4">
+<h4 id="orgb3ed06b">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-orgb3ed06b">
+<div class="org-src-container">
+<pre class="src src-kotlin">        <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">Destructurations: head et tail */</span>
+        <span style="color: #ff79c6;">fun</span> &lt;<span style="color: #bd93f9;">A&gt;</span> head(l : <span style="color: #bd93f9;">Liste&lt;A&gt;</span>) : <span style="color: #bd93f9;">A</span> = <span style="color: #ff79c6;">when</span> (l) {
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Nil</span> -&gt; <span style="color: #ff79c6;">throw</span> <span style="color: #bd93f9;">IllegalStateException</span>(<span style="color: #f1fa8c;">"head: Nil n'a pas de tête"</span>)
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; l.head
+        }
+
+        <span style="color: #ff79c6;">fun</span> &lt;<span style="color: #bd93f9;">A&gt;</span> tail(l : <span style="color: #bd93f9;">Liste&lt;A&gt;</span>) : <span style="color: #bd93f9;">Liste&lt;A&gt;</span> = <span style="color: #ff79c6;">when</span> (l) {
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Nil</span> -&gt; <span style="color: #ff79c6;">throw</span> <span style="color: #bd93f9;">IllegalStateException</span>(<span style="color: #f1fa8c;">"tail: Nil n'a pas de queue"</span>)
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; l.tail
+        }
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org5b74c45" class="outline-3">
+<h3 id="org5b74c45"><span class="section-number-3">2.3.</span> Remplacer la tête</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Écrire la fonction <code>setHead(l,x)</code> qui renvoie liste <code>l</code> dont le premier élément est
+remplacé par <code>x</code>.
+</p>
+</div>
+<div id="outline-container-org1ef5ac2" class="outline-4">
+<h4 id="org1ef5ac2">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org1ef5ac2">
+<div class="org-src-container">
+<pre class="src src-kotlin">        <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">Remplace le premier élément d'une liste par une autre valeur */</span>
+        <span style="color: #ff79c6;">fun</span> &lt;<span style="color: #bd93f9;">A&gt;</span> setHead(l : <span style="color: #bd93f9;">Liste&lt;A&gt;</span>, x : <span style="color: #bd93f9;">A</span>) : <span style="color: #bd93f9;">Liste&lt;A&gt;</span> = <span style="color: #ff79c6;">when</span> (l) {
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Nil</span> -&gt; <span style="color: #ff79c6;">throw</span> <span style="color: #bd93f9;">IllegalStateException</span>(<span style="color: #f1fa8c;">"setHead: Nil n'a pas de tête"</span>)
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; <span style="color: #bd93f9;">Cons</span>(x, tail(l))
+        }
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org473a8d1" class="outline-3">
+<h3 id="org473a8d1"><span class="section-number-3">2.4.</span> Supprimer les n premiers éléments</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Écrire la fonction <code>drop(l,n)</code> qui renvoie la liste <code>l</code> amputée de ses <code>n</code> premiers
+éléments.
+</p>
+</div>
+<div id="outline-container-org6ee4519" class="outline-4">
+<h4 id="org6ee4519">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org6ee4519">
+<div class="org-src-container">
+<pre class="src src-kotlin">        <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">Supprime les n premiers éléments d'une liste. */</span>
+        <span style="color: #ff79c6;">fun</span> &lt;<span style="color: #bd93f9;">A&gt;</span> drop(l : <span style="color: #bd93f9;">Liste&lt;A&gt;</span>, n : <span style="color: #bd93f9;">Int</span>) : <span style="color: #bd93f9;">Liste&lt;A&gt;</span> = <span style="color: #ff79c6;">when</span> {
+            n&lt;0 -&gt; <span style="color: #ff79c6;">throw</span> <span style="color: #bd93f9;">IllegalStateException</span>(<span style="color: #f1fa8c;">"drop: n doit être positif ou nul"</span>)
+            n == <span style="color: #bd93f9; font-weight: bold;">0</span> -&gt; l
+            <span style="color: #ff79c6;">else</span> -&gt;  <span style="color: #ff79c6;">when</span> (l) {
+                <span style="color: #bd93f9;">Nil</span> -&gt; <span style="color: #ff79c6;">throw</span> <span style="color: #bd93f9;">IllegalStateException</span>(<span style="color: #f1fa8c;">"drop: liste trop petite"</span>)
+                <span style="color: #ff79c6;">else</span> -&gt; drop(tail(l), n-1)
+            }
+        }
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org165c469" class="outline-3">
+<h3 id="org165c469"><span class="section-number-3">2.5.</span> Suppression avec prédicat</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Écrire la fonction <code>dropWhile(l,p)</code> qui renvoie la liste <code>l</code> amputée des premiers
+éléments de <code>l</code> qui satisfont le prédicat <code>p</code> jusqu’au premier élément (exclus) qui
+ne satisfait pas <code>p</code>.
+</p>
+</div>
+<div id="outline-container-org7904bea" class="outline-4">
+<h4 id="org7904bea">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org7904bea">
+<div class="org-src-container">
+<pre class="src src-kotlin">        <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">Supprime les premiers éléments d'une liste tant qu'ils satisfont une prédicat */</span>
+        <span style="color: #ff79c6;">fun</span> &lt;<span style="color: #bd93f9;">A&gt;</span> dropWhile(l: <span style="color: #bd93f9;">Liste&lt;A&gt;</span>, p: (<span style="color: #bd93f9;">A</span>) -&gt; <span style="color: #bd93f9;">Boolean</span>) : <span style="color: #bd93f9;">Liste&lt;A&gt;</span> = <span style="color: #ff79c6;">when</span> (l) {
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Nil</span> -&gt; <span style="color: #bd93f9;">Nil</span>
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; <span style="color: #ff79c6;">if</span> (p(l.head)) dropWhile(l.tail,p) <span style="color: #ff79c6;">else</span> l
+        }
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org32ca67d" class="outline-3">
+<h3 id="org32ca67d"><span class="section-number-3">2.6.</span> Longueur totale de chaînes</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+En suivant le modèle des fonctions <code>sum</code> et <code>product</code> écrire une fonction
+<code>lengthOfStrings(l)</code> qui calcule la somme des longueurs des chaînes de caractères
+contenues dans la liste <code>l</code>.
+</p>
+</div>
+<div id="outline-container-org9ab740f" class="outline-4">
+<h4 id="org9ab740f">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org9ab740f">
+<div class="org-src-container">
+<pre class="src src-kotlin">        <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">Longueur cumulée des chaînes de caractères contenues dans une liste */</span>
+        <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">lengthOfStrings</span>(l : <span style="color: #bd93f9;">Liste&lt;String&gt;</span>) : <span style="color: #bd93f9;">Int</span> = <span style="color: #ff79c6;">when</span> (l) {
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Nil</span> -&gt; <span style="color: #bd93f9; font-weight: bold;">0</span>
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; l.head.length + lengthOfStrings(l.tail)
+        }
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org0b89cf9" class="outline-3">
+<h3 id="org0b89cf9"><span class="section-number-3">2.7.</span> <code>foldRight</code>: généralisation de <code>sum</code>, <code>product</code> et <code>lengthOfStrings</code></h3>
+<div class="outline-text-3" id="text-2-7">
+<ul class="org-ul">
+<li><p>
+On remarque que les fonctions <code>sum</code>, <code>product</code> et <code>lengthOfStrings</code> partagent la
+même structure. En effet, elles ne diffèrent que par la valeur (<code>z</code>) renvoyée
+pour la chaîne vide et l’opération (<code>f</code>) appliquée sur ses éléments. Par
+ailleurs, comme dans le cas de <code>lengthOfStrings</code>, le type de valeur renvoyée
+(<code>Int</code>) peut également différer du type des valeurs contenues dans la liste
+(<code>String</code>). Par conséquent, on peut généraliser ces fonctions en ajoutant <code>z</code> et <code>f</code> à leurs
+arguments, et écrire la fonction:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #ff79c6;">fun</span> &lt;<span style="color: #bd93f9;">A</span>,<span style="color: #bd93f9;">B&gt;</span> foldRight(l : <span style="color: #bd93f9;">Liste&lt;A&gt;</span>, z : <span style="color: #bd93f9;">B</span>, f : (<span style="color: #bd93f9;">A</span>,<span style="color: #bd93f9;">B</span>) -&gt; <span style="color: #bd93f9;">B</span> ) : <span style="color: #bd93f9;">B</span>
+</pre>
+</div></li>
+<li>Réécrivez les fonctions <code>sum</code>, <code>product</code> et <code>lengthOfStrings</code> (nommées <code>sum2</code>,
+<code>product2</code> et <code>lengthOfStrings2</code>) à l’aide de <code>foldRight</code>.</li>
+<li>Écrivez la fonction <code>length(l)</code> qui calcule la longueur d’une liste <code>l</code> à l’aide de <code>foldRight</code>.</li>
+</ul>
+</div>
+<div id="outline-container-orgd52b6bb" class="outline-4">
+<h4 id="orgd52b6bb">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-orgd52b6bb">
+<div class="org-src-container">
+<pre class="src src-kotlin">        <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">foldRight : généralisation de sum, product */</span>
+        <span style="color: #ff79c6;">fun</span> &lt;<span style="color: #bd93f9;">A</span>,<span style="color: #bd93f9;">B&gt;</span> foldRight(l : <span style="color: #bd93f9;">Liste&lt;A&gt;</span>, z : <span style="color: #bd93f9;">B</span>, f : (<span style="color: #bd93f9;">A</span>,<span style="color: #bd93f9;">B</span>) -&gt; <span style="color: #bd93f9;">B</span> ) : <span style="color: #bd93f9;">B</span> = <span style="color: #ff79c6;">when</span> (l) {
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Nil</span> -&gt; z
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; f(l.head, foldRight(l.tail,z,f))
+        }
+
+        <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">Réimplémentation de sum, product et longueur */</span>
+        <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">sum2</span>(l : <span style="color: #bd93f9;">Liste&lt;Int&gt;</span>) : <span style="color: #bd93f9;">Int</span> = foldRight(l, <span style="color: #bd93f9; font-weight: bold;">0</span>, {a , b -&gt; a+b} )
+        <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">product2</span>(l : <span style="color: #bd93f9;">Liste&lt;Double&gt;</span>) : <span style="color: #bd93f9;">Double</span> = foldRight(l, <span style="color: #bd93f9; font-weight: bold;">1.0</span>, {a , b -&gt; a*b} )
+        <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">lengthOfStrings2</span>(l : <span style="color: #bd93f9;">Liste&lt;String&gt;</span>) : <span style="color: #bd93f9;">Int</span> = foldRight(l, <span style="color: #bd93f9; font-weight: bold;">0</span>, {a, b -&gt; a.length + b})
+
+        <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">Longueur d'une liste avec foldRight */</span>
+        <span style="color: #ff79c6;">fun</span> &lt;<span style="color: #bd93f9;">A&gt;</span> length(l : <span style="color: #bd93f9;">Liste&lt;A&gt;</span>) : <span style="color: #bd93f9;">Int</span> = foldRight(l, <span style="color: #bd93f9; font-weight: bold;">0</span>, { a, b -&gt; <span style="color: #bd93f9; font-weight: bold;">1</span> + b})
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc57f3a1" class="outline-2">
+<h2 id="orgc57f3a1"><span class="section-number-2">3.</span> Récursion terminale</h2>
+<div class="outline-text-2" id="text-3">
+
+<div id="org39d70b1" class="figure">
+<p><img src="Programmation%20fonctionnelle%20avec%20Kotlin_files/functional_xkcd.png" alt="functional_xkcd.png" width="280px">
+</p>
+</div>
+</div>
+<div id="outline-container-org919c5d0" class="outline-3">
+<h3 id="org919c5d0"><span class="section-number-3">3.1.</span> Calculs terminaux</h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li>Écrire la fonction <code>sumTerm</code> version récursive terminale de la fonction <code>sum</code>.
+Pour ce faire, vous utiliserez une fonction locale auxiliaire pourvue d’un
+accumulateur et qui sera effectivement la fonction récursive terminale.</li>
+<li>Même question pour <code>product</code> et <code>lengthOfStrings</code></li>
+</ul>
+</div>
+<div id="outline-container-orgc542629" class="outline-4">
+<h4 id="orgc542629">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-orgc542629">
+<div class="org-src-container">
+<pre class="src src-kotlin">        <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">sumTerm</span>(l : <span style="color: #bd93f9;">Liste&lt;Int&gt;</span>) : <span style="color: #bd93f9;">Int</span> {
+            <span style="color: #ff79c6;">tailrec</span> <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">sumTermAux</span>(l: <span style="color: #bd93f9;">Liste&lt;Int&gt;</span>, acc: <span style="color: #bd93f9;">Int</span>): <span style="color: #bd93f9;">Int</span> = <span style="color: #ff79c6;">when</span> (l) {
+                <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Nil</span> -&gt; acc
+                <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; sumTermAux(l.tail, l.head + acc)
+            }
+            <span style="color: #ff79c6;">return</span> sumTermAux(l, <span style="color: #bd93f9; font-weight: bold;">0</span>)
+        }
+
+        <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">product terminale */</span>
+        <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">productTerm</span>(l : <span style="color: #bd93f9;">Liste&lt;Double&gt;</span>) : <span style="color: #bd93f9;">Double</span> {
+            <span style="color: #ff79c6;">tailrec</span> <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">productTermAux</span>(l: <span style="color: #bd93f9;">Liste&lt;Double&gt;</span>, acc: <span style="color: #bd93f9;">Double</span>): <span style="color: #bd93f9;">Double</span> = <span style="color: #ff79c6;">when</span> (l) {
+                <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Nil</span> -&gt; acc
+                <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; productTermAux(l.tail, l.head + acc)
+            }
+            <span style="color: #ff79c6;">return</span> productTermAux(l, <span style="color: #bd93f9; font-weight: bold;">1.0</span>)
+        }
+
+        <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">lengthOfStrings terminale */</span>
+        <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">lengthOfStringsTerm</span>(l : <span style="color: #bd93f9;">Liste&lt;String&gt;</span>) : <span style="color: #bd93f9;">Int</span> {
+            <span style="color: #ff79c6;">tailrec</span> <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">lengthOfStringsTermAux</span>(l: <span style="color: #bd93f9;">Liste&lt;String&gt;</span>, acc: <span style="color: #bd93f9;">Int</span>): <span style="color: #bd93f9;">Int</span> = <span style="color: #ff79c6;">when</span> (l) {
+                <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Nil</span> -&gt; acc
+                <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; lengthOfStringsTermAux(l.tail, l.head.length + acc)
+            }
+            <span style="color: #ff79c6;">return</span> lengthOfStringsTermAux(l, <span style="color: #bd93f9; font-weight: bold;">1</span>)
+        }
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc12d904" class="outline-3">
+<h3 id="orgc12d904"><span class="section-number-3">3.2.</span> Pliage terminal</h3>
+<div class="outline-text-3" id="text-3-2">
+<ul class="org-ul">
+<li>La fonction <code>foldRight</code> écrite plus haute n’est pas récursive terminale.
+Implémentez la fonction <code>foldLeft</code> version récursive <i>terminale</i> de <code>foldRight</code>
+comme généralisation des fonctions précédentes.</li>
+<li>Implémentez la fonction <code>sumTerm2</code>, fonction identique à <code>sumTerm</code> mais
+implémentée à l’aide de <code>foldLeft</code>.</li>
+<li>Même question pour <code>productTerm</code> et <code>lengthOfStringsTerm</code>.</li>
+</ul>
+</div>
+<div id="outline-container-orgc0ce32c" class="outline-4">
+<h4 id="orgc0ce32c">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-orgc0ce32c">
+<div class="org-src-container">
+<pre class="src src-kotlin">        <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">foldLeft */</span>
+        <span style="color: #ff79c6;">tailrec</span> <span style="color: #ff79c6;">fun</span> &lt;<span style="color: #bd93f9;">A</span>,<span style="color: #bd93f9;">B&gt;</span> foldLeft(l : <span style="color: #bd93f9;">Liste&lt;A&gt;</span>, z : <span style="color: #bd93f9;">B</span>, f : (<span style="color: #bd93f9;">B</span>,<span style="color: #bd93f9;">A</span>) -&gt; <span style="color: #bd93f9;">B</span>) : <span style="color: #bd93f9;">B</span> = <span style="color: #ff79c6;">when</span> (l) {
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Nil</span> -&gt; z
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; foldLeft(l.tail, f(z,l.head), f)
+        }
+
+        <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">sumTerm2</span> (l : <span style="color: #bd93f9;">Liste&lt;Int&gt;</span>) : <span style="color: #bd93f9;">Int</span> = foldLeft(l, <span style="color: #bd93f9; font-weight: bold;">0</span>, { a, b -&gt; a + b })
+        <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">productTerm2</span>(l : <span style="color: #bd93f9;">Liste&lt;Double&gt;</span>) : <span style="color: #bd93f9;">Double</span> = foldLeft(l, <span style="color: #bd93f9; font-weight: bold;">1.0</span>, { a, b -&gt; a * b })
+        <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">lengthOfStringsTerm2</span>(l : <span style="color: #bd93f9;">Liste&lt;String&gt;</span>) : <span style="color: #bd93f9;">Int</span> = foldLeft(l, <span style="color: #bd93f9; font-weight: bold;">1</span>, { a, b -&gt; a * b.length })
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org7df5dda" class="outline-2">
+<h2 id="org7df5dda"><span class="section-number-2">4.</span> Évaluation paresseuse</h2>
+<div class="outline-text-2" id="text-4">
+
+<div id="org19adc39" class="figure">
+<p><img src="Programmation%20fonctionnelle%20avec%20Kotlin_files/haskell.png" alt="haskell.png">
+</p>
+</div>
+
+<p>
+Dans la majorité des langages de programmation (y compris Kotlin) l’exécution
+des programmes suit une <i>évaluation stricte</i> (dite aussi <i>appel par valeur</i>). Elle
+consiste, pour l’évaluation d’une fonction (ou d’un opérateur), à évaluer les
+arguments <i>avant</i> d’évaluer la fonction. Ainsi, l’évaluation de l’appel <code>inc(1+2)</code>
+évalue d’abord l’expression <code>1+2</code> (i.e. <code>3</code>), puis évalue la fonction <code>inc</code> pour la
+valeur <code>3</code>.
+</p>
+
+<p>
+L’alternative, qui consiste à n’évaluer les arguments que lorsqu’ils sont
+nécessaires dans l’évaluation de la fonction, s’appelle l’<i>évaluation paresseuse</i>
+(aussi appelée <i>appel par nom</i> ou <i>évaluation non stricte</i>). Celle-ci peut s’avérer
+plus efficace que l’appel par valeur. C’est celle qui est en particulier
+implémentée par défaut dans le langage Haskell.
+</p>
+
+<p>
+Dans un langage comme Kotlin, il est cependant possible de simuler l’évaluation
+paresseuse pour bénéficier de ses avantages. Il faut en effet encapsuler les
+valeurs dans des lambdas (appelées <i>thunk</i>). Ainsi, l’expression <code>1+2</code> (de type <code>Int</code>)
+est encapsulée avec <code>{ 1+2 }</code> (qui est de type <code>()-&gt;Int</code>) qui ne s’évalue en 3 que
+lorsque cette expression est appliquée à <code>()</code> (ie. <code>{1+2}()</code>).
+</p>
+
+<p>
+Pour illustrer l’évaluation paresseuse et sa simulation en Kotlin, nous allons
+implémenter des streams (ce sont les <code>Sequence</code> de l’API Kotlin). Leur définition
+est très proche de celle des listes. La différence est que la tête et la queue
+sont systématiquement encapsulées dans une lambda:
+</p>
+<div class="org-src-container">
+<pre class="src src-kotlin"><span style="color: #ff79c6;">sealed</span> <span style="color: #ff79c6;">class</span> <span style="color: #bd93f9;">Stream&lt;out</span> <span style="color: #bd93f9;">A&gt;</span>
+
+<span style="color: #ff79c6;">object</span> <span style="color: #bd93f9;">Empty</span> : <span style="color: #bd93f9;">Stream&lt;Nothing&gt;</span>()
+
+<span style="color: #ff79c6;">data</span> <span style="color: #ff79c6;">class</span> <span style="color: #bd93f9;">Cons&lt;out</span> <span style="color: #bd93f9;">A&gt;</span>(
+    <span style="color: #ff79c6;">val</span> <span style="color: #ffc9e8;">head</span>: () -&gt; <span style="color: #bd93f9;">A</span>,
+    <span style="color: #ff79c6;">val</span> <span style="color: #ffc9e8;">tail</span>: () -&gt; <span style="color: #bd93f9;">Stream&lt;A&gt;</span>
+): <span style="color: #bd93f9;">Stream&lt;A&gt;</span>()
+</pre>
+</div>
+
+<p>
+Dans le fichier <code>Stream.mk</code> qui est fourni sur Moodle, remarquez les imports
+réalisés pour bénéficier des fonctions définies précédemment sur les listes. Le
+constructeur de listes <code>Cons</code> est renommé <code>ConsL</code> pour éviter la confusion avec le
+constructeur sur les <code>Stream</code>. Enfin, nous utiliserons la fonction <code>cons</code>, au lieu
+du constructeur de Stream <code>Cons</code>, qui permet d’évaluer une seule fois une
+expression paresseuse en mémorisant (on dit <a href="https://fr.wikipedia.org/wiki/M%C3%A9mo%C3%AFsation">mémoïser</a>) sa valeur (inutile de
+comprendre les détails de cette fonction ici…). Cette fonction est par exemple
+utilisée la fonction <code>of</code> qui est également fournie.
+</p>
+
+<p>
+Dans la suite, cette fois-ci, les fonctions implémentées seront des méthodes
+d’instance (et non pas des méthodes «&nbsp;statiques&nbsp;» comme précédemment).
+</p>
+</div>
+<div id="outline-container-org6545a2d" class="outline-3">
+<h3 id="org6545a2d"><span class="section-number-3">4.1.</span> Tête</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Implémenter la fonction (d’instance) <code>head</code> qui renvoie la tête de la stream.
+</p>
+</div>
+<div id="outline-container-orgbf8e2df" class="outline-4">
+<h4 id="orgbf8e2df">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-orgbf8e2df">
+<div class="org-src-container">
+<pre class="src src-kotlin">    <span style="color: #ff79c6;">fun</span> &lt;<span style="color: #bd93f9;">A&gt;</span> head(): <span style="color: #bd93f9;">A</span> = <span style="color: #ff79c6;">when</span> (<span style="color: #ff79c6;">this</span>) {
+        <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Empty</span> -&gt; <span style="color: #ff79c6;">throw</span> <span style="color: #bd93f9;">IllegalStateException</span>(<span style="color: #f1fa8c;">"head: Nil n'a pas de tête"</span>)
+        <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; <span style="color: #ff79c6;">this</span>.head()
+    }
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org85c90b8" class="outline-3">
+<h3 id="org85c90b8"><span class="section-number-3">4.2.</span> Conversion en liste</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Pour afficher correctement les stream, le plus simple est de les convertir en listes.
+Implémenter la fonction <code>toList</code> qui convertie une <code>Stream</code> en <code>Liste</code>.
+</p>
+</div>
+<div id="outline-container-org0a70526" class="outline-4">
+<h4 id="org0a70526">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org0a70526">
+<div class="org-src-container">
+<pre class="src src-kotlin">    <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">Convertie une stream en liste */</span>
+    <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">toList</span>(): <span style="color: #bd93f9;">Liste&lt;A&gt;</span> = <span style="color: #ff79c6;">when</span> (<span style="color: #ff79c6;">this</span>) {
+        <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Empty</span> -&gt; <span style="color: #bd93f9;">Nil</span>
+        <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; <span style="color: #bd93f9;">ConsL</span>(<span style="color: #ff79c6;">this</span>.head(), <span style="color: #ff79c6;">this</span>.tail().toList())
+    }
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org7582a47" class="outline-3">
+<h3 id="org7582a47"><span class="section-number-3">4.3.</span> Suppression d’éléments</h3>
+<div class="outline-text-3" id="text-4-3">
+<ul class="org-ul">
+<li>Implémenter la fonction <code>take(n)</code> qui renvoie la stream composée des <code>n</code>
+premiers éléments de la stream.</li>
+<li>Implémenter la fonction <code>drop(n)</code> qui renvoie la stream amputée de ses <code>n</code>
+premiers éléments.</li>
+<li>Implémenter la fonction <code>takeWhile(p)</code> qui renvoie la stream composée des
+éléments de la stream initiale jusqu’au premier élément qui ne satisfait pas
+le prédicat <code>p</code>.</li>
+</ul>
+</div>
+<div id="outline-container-org3e76c29" class="outline-4">
+<h4 id="org3e76c29">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org3e76c29">
+<div class="org-src-container">
+<pre class="src src-kotlin">    <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">Renvoie les n premiers éléments */</span>
+    <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">take</span>(n: <span style="color: #bd93f9;">Int</span>): <span style="color: #bd93f9;">Stream&lt;A&gt;</span> = <span style="color: #ff79c6;">when</span> {
+        n &lt; <span style="color: #bd93f9; font-weight: bold;">0</span> -&gt; <span style="color: #ff79c6;">throw</span> <span style="color: #bd93f9;">IllegalStateException</span>(<span style="color: #f1fa8c;">"take: n doit être positif ou nul"</span>)
+        n == <span style="color: #bd93f9; font-weight: bold;">0</span> -&gt; <span style="color: #bd93f9;">Empty</span>
+        <span style="color: #ff79c6;">else</span> -&gt; <span style="color: #ff79c6;">when</span> (<span style="color: #ff79c6;">this</span>) {
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Empty</span> -&gt; <span style="color: #ff79c6;">throw</span> <span style="color: #bd93f9;">IllegalStateException</span>(<span style="color: #f1fa8c;">"take: Stream trop petite"</span>)
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; cons(<span style="color: #ff79c6;">this</span>.head, { <span style="color: #ff79c6;">this</span>.tail().take(n - <span style="color: #bd93f9; font-weight: bold;">1</span>) })
+        }
+    }
+
+    <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">Supprime les n premiers éléments d'une stream */</span>
+    <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">drop</span>(n: <span style="color: #bd93f9;">Int</span>): <span style="color: #bd93f9;">Stream&lt;A&gt;</span> = <span style="color: #ff79c6;">when</span> {
+        n &lt; <span style="color: #bd93f9; font-weight: bold;">0</span> -&gt; <span style="color: #ff79c6;">throw</span> <span style="color: #bd93f9;">IllegalStateException</span>(<span style="color: #f1fa8c;">"drop: n doit être positif ou nul"</span>)
+        n == <span style="color: #bd93f9; font-weight: bold;">0</span> -&gt; <span style="color: #ff79c6;">this</span>
+        <span style="color: #ff79c6;">else</span> -&gt; <span style="color: #ff79c6;">when</span> (<span style="color: #ff79c6;">this</span>) {
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Empty</span> -&gt; <span style="color: #ff79c6;">throw</span> <span style="color: #bd93f9;">IllegalStateException</span>(<span style="color: #f1fa8c;">"drop: liste trop petite"</span>)
+            <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; drop(n - <span style="color: #bd93f9; font-weight: bold;">1</span>)
+        }
+    }
+
+    <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">renvoie la stream composée des éléments de this jusqu'au premier élément */</span>
+    <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">qui ne satisfait pas le prédicat p */</span>
+    <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">takeWhile</span>(p: (<span style="color: #bd93f9;">A</span>) -&gt; <span style="color: #bd93f9;">Boolean</span>): <span style="color: #bd93f9;">Stream&lt;A&gt;</span> = <span style="color: #ff79c6;">when</span> (<span style="color: #ff79c6;">this</span>) {
+        <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Empty</span> -&gt; <span style="color: #bd93f9;">Empty</span>
+        <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; <span style="color: #ff79c6;">if</span> (p(<span style="color: #ff79c6;">this</span>.head())) cons(<span style="color: #ff79c6;">this</span>.head, { <span style="color: #ff79c6;">this</span>.tail().takeWhile(p) })
+        <span style="color: #ff79c6;">else</span> <span style="color: #bd93f9;">Empty</span>
+    }
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org36627a4" class="outline-3">
+<h3 id="org36627a4"><span class="section-number-3">4.4.</span> Existence</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+Implémenter la fonction <code>exists(p)</code> qui teste l’existence d’un élément dans la
+stream qui statisfait le prédicat <code>p</code>.
+</p>
+</div>
+<div id="outline-container-org62d08be" class="outline-4">
+<h4 id="org62d08be">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org62d08be">
+<div class="org-src-container">
+<pre class="src src-kotlin">    <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">teste l'existance d'un élément dans la stream qui statisfait le prédicat p */</span>
+    <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">exists</span>(p: (<span style="color: #bd93f9;">A</span>) -&gt; <span style="color: #bd93f9;">Boolean</span>): <span style="color: #bd93f9;">Boolean</span> = <span style="color: #ff79c6;">when</span> (<span style="color: #ff79c6;">this</span>) {
+        <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Empty</span> -&gt; <span style="color: #8be9fd;">false</span>
+        <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; <span style="color: #ff79c6;">if</span> (p(<span style="color: #ff79c6;">this</span>.head())) <span style="color: #8be9fd;">true</span> <span style="color: #ff79c6;">else</span> <span style="color: #ff79c6;">this</span>.tail().exists(p)
+    }
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org2844cc1" class="outline-3">
+<h3 id="org2844cc1"><span class="section-number-3">4.5.</span> <code>foldRight</code> paresseux</h3>
+<div class="outline-text-3" id="text-4-5">
+<ul class="org-ul">
+<li>Implémenter une version paresseuse de <code>foldRight</code>.</li>
+<li>Réimplémenter la fonction <code>exists</code> (nommée cette fois <code>exists2</code>) à l’aide de <code>foldRight</code>.</li>
+<li>Réimplémenter la fonction <code>takeWhile</code> (nommée cette fois <code>takeWhile2</code>) à l’aide de <code>foldRight</code>.</li>
+</ul>
+</div>
+<div id="outline-container-org2c00f52" class="outline-4">
+<h4 id="org2c00f52">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org2c00f52">
+<div class="org-src-container">
+<pre class="src src-kotlin">    <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">foldRight */</span>
+    <span style="color: #ff79c6;">fun</span> &lt;<span style="color: #bd93f9;">B&gt;</span> foldRight(z: () -&gt; <span style="color: #bd93f9;">B</span>, f: (<span style="color: #bd93f9;">A</span>, () -&gt; <span style="color: #bd93f9;">B</span>) -&gt; <span style="color: #bd93f9;">B</span>): <span style="color: #bd93f9;">B</span> = <span style="color: #ff79c6;">when</span> (<span style="color: #ff79c6;">this</span>) {
+        <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Empty</span> -&gt; z()
+        <span style="color: #ff79c6;">is</span> <span style="color: #bd93f9;">Cons</span> -&gt; f(<span style="color: #ff79c6;">this</span>.head()) { <span style="color: #ff79c6;">this</span>.tail().foldRight(z, f) }
+    }
+
+    <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">exists avec foldRight */</span>
+    <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">exists2</span>(p: (<span style="color: #bd93f9;">A</span>) -&gt; <span style="color: #bd93f9;">Boolean</span>): <span style="color: #bd93f9;">Boolean</span> = <span style="color: #ff79c6;">this</span>.foldRight( { <span style="color: #8be9fd;">false</span> }, { a, b -&gt; <span style="color: #ff79c6;">if</span> (p(a)) <span style="color: #8be9fd;">true</span> <span style="color: #ff79c6;">else</span> b() } )
+
+    <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">takeWhile avec foldRight */</span>
+    <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">takeWhile2</span>(p: (<span style="color: #bd93f9;">A</span>) -&gt; <span style="color: #bd93f9;">Boolean</span>): <span style="color: #bd93f9;">Stream&lt;A&gt;</span> = <span style="color: #ff79c6;">this</span>.foldRight( { <span style="color: #bd93f9;">Empty</span> <span style="color: #ff79c6;">as</span> <span style="color: #bd93f9;">Stream&lt;A&gt;</span> } , { a, b -&gt; <span style="color: #ff79c6;">if</span> (p(a)) cons({ a }, b) <span style="color: #ff79c6;">else</span> <span style="color: #bd93f9;">Empty</span> })
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc27800f" class="outline-3">
+<h3 id="orgc27800f"><span class="section-number-3">4.6.</span> Filtre et recherche</h3>
+<div class="outline-text-3" id="text-4-6">
+<ul class="org-ul">
+<li>Implémenter la fonction <code>filter(p)</code> qui renvoie la stream des éléments qui
+satisfont le prédicat <code>p</code>. Pour ce faire, vous utiliserez <code>foldRight</code>.</li>
+<li>À l’aide de <code>filtre</code> implémentez la méthode <code>find(p)</code> qui trouve le premier
+élément de la stream qui satisfait le prédicat <code>p</code>.</li>
+<li>Bien que <code>filtre</code> extrait tous les éléments de la stream qui satisfont <code>p</code>, <code>find</code>
+se contente d’inspecter uniquement les premiers éléments jusqu’au premier
+qui satisfait <code>p</code>. Pourtant <code>find</code> utilise <code>filtre</code>!! Pourquoi ?</li>
+</ul>
+</div>
+<div id="outline-container-org44741ee" class="outline-4">
+<h4 id="org44741ee">&nbsp;&nbsp;&nbsp;<span class="tag"><span class="solution">solution</span></span></h4>
+<div class="outline-text-4" id="text-org44741ee">
+<div class="org-src-container">
+<pre class="src src-kotlin">    <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">Trouver les éléments d'une Stream qui satisfont un prédicat */</span>
+    <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">filter</span>(p : (<span style="color: #bd93f9;">A</span>) -&gt; <span style="color: #bd93f9;">Boolean</span>) : <span style="color: #bd93f9;">Stream&lt;A&gt;</span> = <span style="color: #ff79c6;">this</span>.foldRight( { <span style="color: #bd93f9;">Empty</span> <span style="color: #ff79c6;">as</span> <span style="color: #bd93f9;">Stream&lt;A&gt;</span> }, { a, b -&gt; <span style="color: #ff79c6;">if</span> (p(a)) cons({ a }, b) <span style="color: #ff79c6;">else</span> b() } )
+
+    <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">Premier élément qui satisfait un prédicat */</span>
+    <span style="color: #ff79c6;">fun</span> <span style="color: #50fa7b;">find</span>(p : (<span style="color: #bd93f9;">A</span>) -&gt; <span style="color: #bd93f9;">Boolean</span>) : <span style="color: #bd93f9;">A</span> = filter(p).head()
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Auteur: Cédric Lhoussaine</p>
+</div>
+
+
+<protonpass-root-721c data-protonpass-role="root" data-protonpass-theme="os"></protonpass-root-721c></body></html>
